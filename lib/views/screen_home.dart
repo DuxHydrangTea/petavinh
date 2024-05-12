@@ -16,7 +16,6 @@ class ScreenHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(HomeController());
-    int selectChip = 2, exlore = 2;
     List<Topic> listRangePost = MyListChip.getRangeChip();
     return GetBuilder<HomeController>(
       builder: (controller) {
@@ -25,7 +24,12 @@ class ScreenHome extends StatelessWidget {
             child: SafeArea(
                 child: Column(
               children: [
-                const HeaderHome(),
+                HeaderHome(
+                  logout: () {
+                    controller.logout();
+                  },
+                  helloUsername: controller.username,
+                ),
                 const Gap(10),
                 ListChipBar(
                   label: "Ratest Posts",
@@ -63,19 +67,24 @@ class ScreenHome extends StatelessWidget {
                 ListChipBar(
                   label: "Explore",
                   children: [
-                    MyChip(
-                      topic: Topic(
-                          id: 1, topicname: "All", description: "Nothing"),
-                      seleted: exlore,
-                    ),
                     ...listRangePost.map((e) => MyChip(
                           topic: Topic(id: e.id, topicname: e.topicname),
-                          seleted: selectChip,
+                          seleted: controller.selectedLocal,
+                          onTap: () {
+                            controller.updateSelectLocal(e.id);
+                          },
                         ))
                   ],
                 ),
                 ListPost(
-                  listPost: [...controller.listAllPost],
+                  //listPost: [...controller.listPostExplore],
+                  listPost: [
+                    ...controller.selectedLocal == 1
+                        ? controller.listAllPost
+                        : (controller.selectedLocal == 2
+                            ? controller.listPostExplore
+                            : controller.listPostFollow)
+                  ],
                   listComment: [...controller.listComment],
                 ),
               ],

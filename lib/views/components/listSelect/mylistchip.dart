@@ -30,9 +30,9 @@ class MyListChip {
 
   static List<Topic> getRangeChip() {
     List<Topic> lc = [
+      Topic(id: 1, topicname: "All", description: "Nothing"),
       Topic(id: 2, topicname: "Group", description: "Nothing"),
       Topic(id: 3, topicname: "My follow", description: "Nothing"),
-      Topic(id: 4, topicname: "My Posts", description: "Nothing"),
     ];
     return lc;
   }

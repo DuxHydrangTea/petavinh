@@ -1,14 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+// ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
 import 'package:petavinh/config/base_url.dart';
 import 'package:petavinh/config/loader_widget.dart';
 import 'package:petavinh/config/my_snack_bar.dart';
+// ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import 'package:petavinh/views/screen_home.dart';
+// ignore: depend_on_referenced_packages
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   late TextEditingController usernameTextEdit, passwordTextEdit;
+  bool isShowPass = true;
   @override
   void onInit() {
     super.onInit();
@@ -37,6 +43,8 @@ class LoginController extends GetxController {
   }
 
   loginAction() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('user_id', 0);
     var post =
         await http.post(Uri.parse("${BaseUrl.getBaseUrl()}login.php"), body: {
       'username': usernameTextEdit.text,
@@ -44,9 +52,17 @@ class LoginController extends GetxController {
     });
     var res = await json.decode(post.body);
     if (res['success']) {
-      mySnackBar("Login", "Success", true);
+      await prefs.setInt('user_id', int.parse(res['user']['id']));
+      await prefs.setString('username', res['user']['username']);
+
+      Get.to(const ScreenHome());
     } else {
       mySnackBar("Login", "False", false);
     }
+  }
+
+  changeShowPass() {
+    isShowPass = !isShowPass;
+    update();
   }
 }

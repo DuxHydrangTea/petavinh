@@ -77,10 +77,19 @@ class ScreenLogin extends StatelessWidget {
                                 height: 15,
                               ),
                               MyTextField(
-                                isPassword: true,
+                                isPassword: controller.isShowPass,
                                 textHint: "Password",
                                 controller: controller.passwordTextEdit,
                               ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  controller.changeShowPass();
+                                },
+                                child: const Text("Show password"),
+                              )
                             ],
                           ),
                         ),

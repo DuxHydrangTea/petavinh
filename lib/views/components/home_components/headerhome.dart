@@ -4,7 +4,9 @@ import 'package:gap/gap.dart';
 import 'package:petavinh/config/myfontweight.dart';
 
 class HeaderHome extends StatelessWidget {
-  const HeaderHome({super.key});
+  String helloUsername;
+  VoidCallback logout;
+  HeaderHome({super.key, required this.helloUsername, required this.logout});
 
   @override
   Widget build(BuildContext context) {
@@ -17,39 +19,43 @@ class HeaderHome extends StatelessWidget {
         ),
       ], color: Colors.white),
       padding: const EdgeInsets.all(10),
-      child: const Column(
+      child: Column(
         children: [
           Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundImage: AssetImage('assets/images/avatar1.jpg'),
               ),
-              Gap(10),
+              const Gap(10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Good morning!",
                     style: TextStyle(fontWeight: MyFontWeight.bold),
                   ),
                   Text(
-                    "Nguyen Ngoc Dung",
-                    style: TextStyle(fontWeight: MyFontWeight.bold),
+                    helloUsername,
+                    style: const TextStyle(fontWeight: MyFontWeight.bold),
                   )
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Row(
                 children: [
-                  Icon(FontAwesomeIcons.bell),
-                  Gap(10),
-                  Icon(FontAwesomeIcons.heart)
+                  const Icon(FontAwesomeIcons.bell),
+                  const Gap(10),
+                  const Icon(FontAwesomeIcons.heart),
+                  const Gap(10),
+                  InkWell(
+                      onTap: logout,
+                      child: const Icon(FontAwesomeIcons.arrowRightFromBracket))
                 ],
               )
             ],
           ),
-          Gap(10),
-          ElevatedButton(
+          const Gap(10),
+          const ElevatedButton(
               onPressed: null,
               style: ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(Color(0xffeeedf2)),

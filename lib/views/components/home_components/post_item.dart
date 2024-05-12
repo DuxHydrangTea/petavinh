@@ -153,7 +153,10 @@ class PostItem extends StatelessWidget {
           // image
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(5)),
-            child: Hero(tag: "Haha", child: Image.asset(post.image)),
+            child: Image.asset(
+              post.image,
+              width: double.infinity,
+            ),
           ),
           // action
           const Divider(),
