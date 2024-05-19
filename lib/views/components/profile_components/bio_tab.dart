@@ -6,7 +6,8 @@ import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myfontweight.dart';
 
 class BioTab extends StatelessWidget {
-  const BioTab({super.key});
+  String bioText, joinTime;
+  BioTab({super.key, required this.bioText, required this.joinTime});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +17,9 @@ class BioTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DropCapText(
-            "This is my Bio, i don't care any things who think, cause i very dep trai so i always true, you wrong. My mom is not fat, you fat. hehehe.",
+            bioText,
             style: const TextStyle(
-              fontWeight: MyFontWeight.normal,
+              fontWeight: MyFontWeight.medium,
               letterSpacing: 1,
               wordSpacing: 0.2,
               decorationThickness: 5,
@@ -52,14 +53,14 @@ class BioTab extends StatelessWidget {
             ),
           ),
           const Gap(10),
-          const Row(
+          Row(
             children: [
-              FaIcon(
+              const FaIcon(
                 FontAwesomeIcons.clock,
                 size: 14,
               ),
-              Gap(10),
-              Text("Joined at 21 Jan 2024")
+              const Gap(10),
+              Text("Joined at $joinTime")
             ],
           )
         ],

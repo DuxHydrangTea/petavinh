@@ -4,7 +4,7 @@ import 'package:petavinh/views/components/my_hero.dart';
 
 // ignore: must_be_immutable
 class AlbumTab extends StatelessWidget {
-  List<String> album;
+  List<Map<String, String>> album;
   AlbumTab({super.key, required this.album});
 
   @override
@@ -27,7 +27,11 @@ class AlbumTab extends StatelessWidget {
                     tag: album[index],
                     child: GestureDetector(
                       onTap: () {
-                        Get.to(MyHeroAlbum(tag: album[index]));
+                        Get.to(MyHeroAlbum(
+                          tag: album[index]['image'] ??
+                              "assets/images/errorIMG.png",
+                          description: album[index]['content']!,
+                        ));
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -35,7 +39,8 @@ class AlbumTab extends StatelessWidget {
                                 const BorderRadius.all(Radius.circular(5)),
                             image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: AssetImage(album[index]))),
+                                image: AssetImage(album[index]['image'] ??
+                                    "assets/images/errorIMG.png"))),
                       ),
                     ),
                   ),

@@ -8,10 +8,12 @@ import 'package:petavinh/controllers/postcontroller.dart';
 import 'package:petavinh/models/comment.dart';
 import 'package:petavinh/models/post.dart';
 import 'package:petavinh/utils/mytime.dart';
+import 'package:petavinh/views/components/container_border.dart';
 import 'package:petavinh/views/components/detailpost_components/comment_item.dart';
 import 'package:petavinh/views/components/my_hero.dart';
 import 'package:petavinh/views/sheet_list_comment.dart';
 
+// ignore: must_be_immutable
 class ScreenPost extends StatelessWidget {
   Post post;
   List<Comment> listComment;
@@ -45,11 +47,14 @@ class ScreenPost extends StatelessWidget {
                       )
                     ],
                   ),
+                  const Gap(10),
                   // header Show name user
                   Row(
                     children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage(post.avatar),
+                      ContainerBorder(
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(post.avatar),
+                        ),
                       ),
                       const Gap(8),
                       Column(
@@ -242,10 +247,12 @@ class ScreenPost extends StatelessWidget {
                   //========= Comment ==============
                   Row(
                     children: [
-                      const CircleAvatar(
-                        radius: 25,
-                        backgroundImage:
-                            AssetImage("assets/images/avatar1.jpg"),
+                      ContainerBorder(
+                        child: const CircleAvatar(
+                          radius: 25,
+                          backgroundImage:
+                              AssetImage("assets/images/avatar1.jpg"),
+                        ),
                       ),
                       const Gap(15),
                       Expanded(
@@ -261,15 +268,6 @@ class ScreenPost extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Visibility(
-                      //   visible: false,
-                      //   child: Expanded(
-                      //     child: TextFormField(
-                      //       controller: controller.postID,
-                      //       //initialValue: post.id.toString(),
-                      //     ),
-                      //   ),
-                      // ),
                       const Gap(15),
                       GestureDetector(
                           onTap: () {
@@ -289,10 +287,15 @@ class ScreenPost extends StatelessWidget {
                     height: 400,
                     padding:
                         const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 215, 215, 215)),
                         // color: Color(0xfff2f2f2),
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5))),
                     child: Scrollbar(
+                      controller: ScrollController(),
+                      thumbVisibility: true,
                       child: SingleChildScrollView(
                         child: Column(
                           children: [

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:petavinh/config/myfontweight.dart';
+import 'package:petavinh/models/user.dart';
+import 'package:petavinh/views/components/container_border.dart';
 
 class FollowedTab extends StatelessWidget {
-  const FollowedTab({super.key});
+  List<User> listFollowed;
+  FollowedTab({super.key, required this.listFollowed});
 
   @override
   Widget build(BuildContext context) {
@@ -11,26 +14,42 @@ class FollowedTab extends StatelessWidget {
       height: 750,
       child: Scrollbar(
         child: ListView.builder(
-            itemCount: 100,
+            itemCount: listFollowed.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
                 margin: const EdgeInsets.only(bottom: 10),
                 child: Column(
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const CircleAvatar(
-                          radius: 17,
-                          backgroundImage:
-                              AssetImage("assets/images/avatar1.jpg"),
+                        ContainerBorder(
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                AssetImage(listFollowed[index].avatar),
+                          ),
                         ),
                         const Gap(10),
-                        const Text(
-                          "Nguyen Ngoc Dung",
-                          style: TextStyle(
-                            fontWeight: MyFontWeight.semiBold,
-                            fontSize: 12,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              listFollowed[index].fullname,
+                              style: const TextStyle(
+                                fontWeight: MyFontWeight.semiBold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              "@${listFollowed[index].username}",
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: MyFontWeight.medium,
+                              ),
+                            ),
+                          ],
                         ),
                         const Spacer(),
                         SizedBox(

@@ -11,6 +11,7 @@ import 'package:petavinh/views/components/home_components/post_group_item.dart';
 import 'package:petavinh/views/components/home_components/post_item.dart';
 import 'package:petavinh/views/components/home_components/ratest_post_card.dart';
 import 'package:petavinh/views/components/listSelect/mylistchip.dart';
+import 'package:petavinh/views/components/my_drawer.dart';
 
 class ScreenHome extends StatelessWidget {
   const ScreenHome({super.key});
@@ -22,6 +23,12 @@ class ScreenHome extends StatelessWidget {
     return GetBuilder<HomeController>(
       builder: (controller) {
         return Scaffold(
+          key: controller.scaffoldKey,
+          endDrawer: Drawer(
+            child: MyDrawer(onPressLogOut: () {
+              controller.logout();
+            }),
+          ),
           body: SingleChildScrollView(
             child: SafeArea(
                 child: Container(
@@ -32,7 +39,11 @@ class ScreenHome extends StatelessWidget {
                     logout: () {
                       controller.logout();
                     },
-                    helloUsername: controller.username,
+                    helloUsername: controller.userProfile.fullname,
+                    avatar: controller.userProfile.avatar,
+                    onDrawer: () {
+                      controller.openDrawer();
+                    },
                   ),
                   const Gap(10),
                   ListChipBar(

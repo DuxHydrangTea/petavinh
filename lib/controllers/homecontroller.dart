@@ -2,8 +2,7 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
 
-// ignore: unused_import
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
 // ignore: unused_import, depend_on_referenced_packages
@@ -19,6 +18,7 @@ import 'package:petavinh/models/post.dart';
 import 'package:petavinh/models/react.dart';
 import 'package:petavinh/models/save.dart';
 import 'package:petavinh/models/topic.dart';
+import 'package:petavinh/models/user.dart';
 import 'package:petavinh/views/screen_login.dart';
 // ignore: unused_import
 import 'package:petavinh/views/screen_signup.dart';
@@ -65,7 +65,9 @@ class HomeController extends GetxController {
   List<int> listSavedByUserID = <int>[];
   // Danh sách tổng hợp các Save
   List<Save> listSave = <Save>[];
+  User userProfile = User();
 
+  var scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void onInit() {
     super.onInit();
@@ -96,6 +98,15 @@ class HomeController extends GetxController {
 
     fetchListSave();
     fectListSavedByUser();
+    fetchUserProfile();
+  }
+
+  void openDrawer() {
+    scaffoldKey.currentState!.openEndDrawer();
+  }
+
+  void closeDrawer() {
+    scaffoldKey.currentState!.closeDrawer();
   }
 
   isLogin() async {
@@ -563,5 +574,31 @@ class HomeController extends GetxController {
       }
       update();
     }
+  }
+
+  fetchUserProfile() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userID = prefs.getInt('user_id') ?? 0;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}getuserbyid.php"), body: {
+      'user_id': userID.toString(),
+    });
+    //
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      var user = result['user'];
+      userProfile = User(
+        id: int.parse(user['id']),
+        username: (user['username']),
+        password: user['password'],
+        fullname: user['fullname'],
+        avatar: user['avatar'],
+        joinedTime: user['joined_time'],
+        description: user['description'],
+        isAdmin: int.parse(user['isAdmin']),
+      );
+      update();
+    }
+    update();
   }
 }

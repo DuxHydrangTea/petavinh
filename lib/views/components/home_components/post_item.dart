@@ -8,6 +8,7 @@ import 'package:petavinh/config/myfontweight.dart';
 import 'package:petavinh/models/comment.dart';
 import 'package:petavinh/models/post.dart';
 import 'package:petavinh/utils/mytime.dart';
+import 'package:petavinh/views/components/container_border.dart';
 import 'package:petavinh/views/components/detailpost_components/list_comments.dart';
 import 'package:petavinh/views/components/my_hero.dart';
 import 'package:petavinh/views/screen_post.dart';
@@ -56,8 +57,10 @@ class PostItem extends StatelessWidget {
             // header Show name user
             Row(
               children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(post.avatar),
+                ContainerBorder(
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(post.avatar),
+                  ),
                 ),
                 const Gap(8),
                 Column(
@@ -176,7 +179,10 @@ class PostItem extends StatelessWidget {
             // image
             GestureDetector(
               onTap: () {
-                Get.to(() => MyHeroAlbum(tag: post.image));
+                Get.to(() => MyHeroAlbum(
+                      tag: post.image,
+                      description: post.content,
+                    ));
               },
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(5)),

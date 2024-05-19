@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:petavinh/config/myfontweight.dart';
 import 'package:petavinh/models/comment.dart';
+import 'package:petavinh/views/components/container_border.dart';
 
 // ignore: must_be_immutable
 class CommentItem extends StatelessWidget {
@@ -20,12 +21,7 @@ class CommentItem extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      //color: Colors.amberAccent,
-                      border: Border.all()),
+                ContainerBorder(
                   child: CircleAvatar(
                     backgroundImage: AssetImage(comment.avatar),
                   ),
@@ -52,7 +48,10 @@ class CommentItem extends StatelessWidget {
                         const Text("24h"),
                       ],
                     ),
-                    Text(comment.commentText),
+                    SizedBox(
+                      width: 299,
+                      child: Text(comment.commentText),
+                    ),
                   ],
                 )
               ],

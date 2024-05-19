@@ -7,6 +7,8 @@ import 'package:petavinh/config/myeffect.dart';
 import 'package:petavinh/config/myfontweight.dart';
 import 'package:petavinh/models/comment.dart';
 import 'package:petavinh/models/post.dart';
+import 'package:petavinh/utils/mytime.dart';
+import 'package:petavinh/views/components/container_border.dart';
 import 'package:petavinh/views/screen_post.dart';
 
 // ignore: must_be_immutable
@@ -81,7 +83,7 @@ class CardPost extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    post.postedDate,
+                    MyTime.diffTime(post.postedDate),
                     style: TextStyle(
                       color: MyColor.textHomeColor,
                       fontSize: 11,
@@ -104,10 +106,11 @@ class CardPost extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const CircleAvatar(
-                        radius: 10,
-                        backgroundImage:
-                            AssetImage("assets/images/avatar1.jpg"),
+                      ContainerBorder(
+                        child: CircleAvatar(
+                          radius: 10,
+                          backgroundImage: AssetImage(post.avatar),
+                        ),
                       ),
                       const Gap(4),
                       Text(

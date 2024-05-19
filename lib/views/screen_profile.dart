@@ -7,6 +7,7 @@ import 'package:petavinh/config/myeffect.dart';
 import 'package:petavinh/config/myfontweight.dart';
 import 'package:petavinh/controllers/profilecontroller.dart';
 import 'package:petavinh/utils/samples.dart';
+import 'package:petavinh/views/components/my_hero.dart';
 import 'package:petavinh/views/components/profile_components/album_tab.dart';
 import 'package:petavinh/views/components/profile_components/bio_tab.dart';
 import 'package:petavinh/views/components/profile_components/followed_tab.dart';
@@ -67,25 +68,35 @@ class ScreenProfile extends StatelessWidget {
                       width: 2,
                     ),
                   ),
-                  child: const CircleAvatar(
-                    radius: 70,
-                    backgroundImage: AssetImage("assets/images/avatar1.jpg"),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.to(MyHeroAlbum(tag: controller.userProfile.avatar));
+                    },
+                    child: CircleAvatar(
+                      radius: 70,
+                      backgroundImage:
+                          AssetImage(controller.userProfile.avatar),
+                    ),
                   ),
                 ),
                 const Gap(20),
-                const Text(
-                  "Nguyen Duc Dat",
-                  style: TextStyle(
+                Text(
+                  controller.userProfile.fullname,
+                  style: const TextStyle(
                     fontWeight: MyFontWeight.bold,
                     fontSize: 25,
+                    color: Colors.black,
                   ),
                 ),
-                const Text(
-                  "@ducdat233",
-                  style: TextStyle(fontSize: 19),
+                Text(
+                  "@${controller.userProfile.username}",
+                  style: const TextStyle(fontSize: 19),
                 ),
                 const Gap(30),
-                const BioTab(),
+                BioTab(
+                  bioText: controller.userProfile.description,
+                  joinTime: controller.userProfile.joinedTime,
+                ),
                 const Gap(30),
                 Container(
                   decoration: MyEffect.getBoxRadiusShadown(5, Colors.white),
@@ -128,14 +139,23 @@ class ScreenProfile extends StatelessWidget {
                 ),
                 const Gap(20),
                 controller.selectTab == 0
-                    ? AlbumTab(album: Sample.album)
+                    ? AlbumTab(album: controller.album)
                     : Container(),
                 controller.selectTab == 1
                     ? PostTab(
-                        listPost: [Sample.post], listComment: [Sample.comment])
+                        listPost: controller.listMyPosts,
+                        listComment: [Sample.comment])
                     : Container(),
-                controller.selectTab == 2 ? const FollowedTab() : Container(),
-                controller.selectTab == 3 ? const FollowersTab() : Container(),
+                controller.selectTab == 2
+                    ? FollowedTab(
+                        listFollowed: [...controller.listFollowed],
+                      )
+                    : Container(),
+                controller.selectTab == 3
+                    ? FollowersTab(
+                        listMeFollow: [...controller.listUserMeFollow],
+                      )
+                    : Container(),
                 // =============== tab =======================
                 // PostTab(
                 //   listPost: [Sample.post],

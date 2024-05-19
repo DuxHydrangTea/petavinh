@@ -3,14 +3,22 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myfontweight.dart';
-import 'package:petavinh/views/components/home_components/menu_bar.dart';
+import 'package:petavinh/views/components/container_border.dart';
 
 // ignore: must_be_immutable
 class HeaderHome extends StatelessWidget {
   String helloUsername;
+  String avatar;
   VoidCallback logout;
-  HeaderHome({super.key, required this.helloUsername, required this.logout});
+  VoidCallback onDrawer;
+  HeaderHome(
+      {super.key,
+      required this.helloUsername,
+      required this.logout,
+      required this.onDrawer,
+      required this.avatar});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +36,8 @@ class HeaderHome extends StatelessWidget {
           Row(
             children: [
               const CircleAvatar(
-                backgroundImage: AssetImage('assets/images/avatar1.jpg'),
+                backgroundImage:
+                    AssetImage('assets/images/Logo-Ultra-Large.png'),
               ),
               const Gap(10),
               Column(
@@ -40,54 +49,61 @@ class HeaderHome extends StatelessWidget {
                   ),
                   Text(
                     helloUsername,
-                    style: const TextStyle(fontWeight: MyFontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: MyFontWeight.bold,
+                      fontSize: 20,
+                      color: MyColor.bookMarkColor,
+                    ),
                   )
                 ],
               ),
               const Spacer(),
               Row(
                 children: [
-                  const Icon(FontAwesomeIcons.bell),
-                  const Gap(10),
-                  const Gap(10),
-                  InkWell(
-                      onTap: logout,
-                      child: const Icon(FontAwesomeIcons.arrowRightFromBracket))
+                  GestureDetector(
+                      onTap: onDrawer,
+                      child: const Icon(FontAwesomeIcons.bars)),
                 ],
               )
             ],
           ),
           const Gap(10),
-          const MyMenuBar(),
-          const Gap(10),
-          const ElevatedButton(
+          ElevatedButton(
               onPressed: null,
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(Color(0xffeeedf2)),
                 padding: MaterialStatePropertyAll(
-                  EdgeInsets.symmetric(horizontal: 10),
+                  //EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  EdgeInsets.only(
+                    left: 10,
+                    right: 19,
+                    bottom: 8,
+                    top: 8,
+                  ),
                 ),
                 shape: MaterialStatePropertyAll(
                   RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
                   ),
                 ),
               ),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/avatar1.jpg'),
-                    radius: 15,
+                  ContainerBorder(
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage(avatar),
+                      radius: 15,
+                    ),
                   ),
-                  Gap(5),
+                  const Gap(5),
                   Text(
-                    "What do your pet today?",
-                    style: TextStyle(fontWeight: MyFontWeight.medium),
+                    "$helloUsername What do your pet today?",
+                    style: const TextStyle(fontWeight: MyFontWeight.medium),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Icon(
                     FontAwesomeIcons.image,
-                    color: Color(0xff524e4e),
+                    color: MyColor.mainColor,
                   )
                 ],
               ))
