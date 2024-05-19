@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:petavinh/views/sheet_list_comment.dart';
 import 'package:petavinh/views/screen_home.dart';
 import 'package:petavinh/views/screen_introhome.dart';
 import 'package:petavinh/views/screen_login.dart';
+import 'package:petavinh/views/screen_profile.dart';
 import 'package:petavinh/views/screen_signup.dart';
 
 class MyRoute {
@@ -11,16 +11,19 @@ class MyRoute {
       __introhome = "/introhome",
       __login = "/login",
       __signup = "/signup",
-      __detail = "/detail";
+      __detail = "/detail",
+      __profile = "/profile";
   static String getIntroHome() => __introhome;
   static String getHome() => __home;
   static String getLogin() => __login;
   static String getSignUp() => __signup;
   static String getDetail() => __detail;
+  static String getProfile() => __profile;
+
   static List<GetPage> routes = [
     GetPage(
       name: __introhome,
-      page: () => ScreenIntroHome(),
+      page: () => const ScreenIntroHome(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(seconds: 1),
     ),
@@ -39,6 +42,12 @@ class MyRoute {
     GetPage(
       name: __signup,
       page: () => const ScreenSignUp(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(seconds: 1),
+    ),
+    GetPage(
+      name: __profile,
+      page: () => const ScreenProfile(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(seconds: 1),
     ),

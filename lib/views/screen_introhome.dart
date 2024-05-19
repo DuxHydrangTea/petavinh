@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 // ignore: unnecessary_import
 import 'package:flutter/widgets.dart';
-import 'package:petavinh/config/myeffect.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 // ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
+import 'package:petavinh/config/myeffect.dart';
+import 'package:petavinh/config/myfontweight.dart';
 // ignore: unused_import
 import 'package:petavinh/config/route.dart';
 import 'package:petavinh/views/screen_home.dart';
 import 'package:petavinh/views/screen_login.dart';
 import 'package:petavinh/views/screen_signup.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class ScreenIntroHome extends StatelessWidget {
   const ScreenIntroHome({super.key});
@@ -44,8 +45,8 @@ class ScreenIntroHome extends StatelessWidget {
                           )
                               .animate()
                               .rotate(
-                                  delay: Duration(milliseconds: 100),
-                                  duration: Duration(milliseconds: 500))
+                                  delay: const Duration(milliseconds: 100),
+                                  duration: const Duration(milliseconds: 500))
                               .fadeIn()
                               .scaleXY(),
                           ShaderMask(
@@ -58,7 +59,7 @@ class ScreenIntroHome extends StatelessWidget {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 27,
-                                  fontFamily: "myPoppins",
+                                  fontWeight: MyFontWeight.bold,
                                 )),
                           ),
                         ])),
@@ -100,11 +101,7 @@ class ScreenIntroHome extends StatelessWidget {
                             ),
                             child: InkWell(
                               onTap: () {
-                                Get.to(
-                                  () => ScreenSignUp(),
-                                  transition: Transition.cupertino,
-                                  duration: const Duration(milliseconds: 500),
-                                );
+                                Get.to(() => const ScreenSignUp());
                               },
                               child: const Text(
                                 "Sign up",
@@ -124,11 +121,7 @@ class ScreenIntroHome extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Get.to(
-                                    () => ScreenLogin(),
-                                    transition: Transition.cupertino,
-                                    duration: const Duration(milliseconds: 500),
-                                  );
+                                  Get.to(() => ScreenLogin());
                                 },
                                 child: const Text(
                                   "Log in",
@@ -152,7 +145,7 @@ class ScreenIntroHome extends StatelessWidget {
                                     .createShader(bounds),
                             child: TextButton(
                               onPressed: () {
-                                Get.to(ScreenHome());
+                                Get.to(() => const ScreenHome());
                               },
                               style: ButtonStyle(
                                   backgroundColor:

@@ -4,14 +4,13 @@ import 'package:petavinh/models/topic.dart';
 // ignore: must_be_immutable
 class MyChip extends StatelessWidget {
   Topic topic;
-  int? index;
   int? seleted;
   VoidCallback? onTap;
   MyChip({super.key, required this.topic, this.seleted = 0, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    index = topic.id;
+    int index = topic.id ?? 0;
     Color bgrColor = seleted != index ? Colors.white : const Color(0xffff8a66);
     Color txtColor = seleted != index ? const Color(0xff524e4e) : Colors.white;
     Color borderColor = seleted != 0

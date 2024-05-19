@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:petavinh/config/route.dart';
-
 // ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
+import 'package:petavinh/config/route.dart';
 
 void main() {
   runApp(const MyApp());

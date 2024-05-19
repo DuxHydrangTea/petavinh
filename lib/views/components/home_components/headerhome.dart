@@ -1,8 +1,12 @@
+// ignore: unnecessary_import
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:petavinh/config/myfontweight.dart';
+import 'package:petavinh/views/components/home_components/menu_bar.dart';
 
+// ignore: must_be_immutable
 class HeaderHome extends StatelessWidget {
   String helloUsername;
   VoidCallback logout;
@@ -45,7 +49,6 @@ class HeaderHome extends StatelessWidget {
                 children: [
                   const Icon(FontAwesomeIcons.bell),
                   const Gap(10),
-                  const Icon(FontAwesomeIcons.heart),
                   const Gap(10),
                   InkWell(
                       onTap: logout,
@@ -54,6 +57,8 @@ class HeaderHome extends StatelessWidget {
               )
             ],
           ),
+          const Gap(10),
+          const MyMenuBar(),
           const Gap(10),
           const ElevatedButton(
               onPressed: null,

@@ -1,16 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gap/gap.dart';
 import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myfontweight.dart';
-import 'package:petavinh/controllers/homecontroller.dart';
-
-import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class ListChipBar extends StatelessWidget {
-  final topicController = Get.put(HomeController());
   List<Widget> children = [];
   String label;
   ListChipBar({super.key, required this.children, required this.label});

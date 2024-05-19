@@ -1,12 +1,13 @@
 // ignore: unused_import
 import 'dart:convert';
-import 'dart:io';
+import 'dart:developer' as developer;
 
 // ignore: unused_import
 import 'package:flutter/cupertino.dart';
 // ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
-import 'package:mysql1/mysql1.dart';
+// ignore: unused_import, depend_on_referenced_packages
+import 'package:http/http.dart' as http;
 // ignore: unused_import
 import 'package:petavinh/config/base_url.dart';
 // ignore: unused_import
@@ -15,36 +16,86 @@ import 'package:petavinh/config/loader_widget.dart';
 import 'package:petavinh/config/my_snack_bar.dart';
 import 'package:petavinh/models/comment.dart';
 import 'package:petavinh/models/post.dart';
+import 'package:petavinh/models/react.dart';
+import 'package:petavinh/models/save.dart';
 import 'package:petavinh/models/topic.dart';
 import 'package:petavinh/views/screen_login.dart';
 // ignore: unused_import
 import 'package:petavinh/views/screen_signup.dart';
-// ignore: unused_import, depend_on_referenced_packages
-import 'package:http/http.dart' as http;
-import 'dart:developer' as developer;
+// ignore: depend_on_referenced_packages
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
+  // Lưu trữ username
   String username = "";
+  //Lưu trữ id người dùng
   int id = 0;
-  int selectedCategory = 0;
+  // Thể loại bài viết đã chọn  - Ratest bar: -1 nghĩa là chọn hết
+  int selectedCategory = -1;
+
+  // Phạm vi bài viết đã chọn - Tất cả - chỉ trong group - chỉ những người mình follow
   int selectedLocal = 1;
+
+  // Danh sách chủ đề
   List<Topic> listTopic = [];
+
+  // Danh sách bài viết tốt nhất
   List<Post> listRatestPost = <Post>[];
+  // Danh sách tổng hợp bình luận
   List<Comment> listComment = <Comment>[];
+//
+//
+  // Danh sách tổng hợp bài viết
   List<Post> listAllPost = <Post>[];
+  // Danh sách bài viết với local = Group
   List<Post> listPostExplore = <Post>[];
+  // Danh sách bài viết với local = Follow
   List<Post> listPostFollow = <Post>[];
+  // Danh sách chứa 1 trong 3 local
+  List<Post> listByLocal = <Post>[];
+
+  // Danh sách tổng hợp chứa các id bài viết mà người dùng đã LIKE
+  List<int> listLiked = <int>[];
+  // Danh sách tổng hợp các React
+  List<React> listReact = <React>[];
+//
+//
+//
+  // Danh sách tổng hợp chứa id bài viết người đăng nhập đã SAVE
+  List<int> listSavedByUserID = <int>[];
+  // Danh sách tổng hợp các Save
+  List<Save> listSave = <Save>[];
+
   @override
   void onInit() {
     super.onInit();
+    // check Đăng nhập
     isLogin();
+
+    // Duyệt chủ đề
     fetchListTopic();
+    // Duyệt danh sách tổng hợp bình luận
     fetchComment();
+    // Duỵet danh sách bài viết tốt nhất
     fecthListRatestPost();
+//
+    // Duyệt tất cả bài viết
     fecthListAllPost();
+    // Duyệt tất cả bài viết nhóm
     fetchPostGroup();
+    // Duyệt tất cả bài viết từ người mình follow
     fetchPostByFollow();
+//
+    // Duyệt danh sách tổng hợp id bài viết mà người dùng đã like
+    fetchListLiked();
+    //fetchPostLocal();
+
+    // Duyệt danh sách React, dựa vào post_id của list React có thể biết 1 bài viết có bao nhiêu Like
+    fetchListReact();
+//
+
+    fetchListSave();
+    fectListSavedByUser();
   }
 
   isLogin() async {
@@ -63,8 +114,8 @@ class HomeController extends GetxController {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt("user_id", 0);
     await prefs.setString("username", "");
-    developer.log("${prefs.getInt('user_id')}");
-    Get.to(ScreenLogin());
+    //developer.log("${prefs.getInt('user_id')}");
+    Get.to(() => ScreenLogin());
     update();
   }
 
@@ -181,7 +232,7 @@ class HomeController extends GetxController {
 
   fetchListTopic() async {
     listTopic = <Topic>[];
-    String query = selectedCategory == 0
+    String query = selectedCategory == -1
         ? "getAllTopics.php"
         : "getAllTopics.php?topicid=$selectedCategory";
     var response = await http.post(Uri.parse("${BaseUrl.getBaseUrl()}$query"));
@@ -303,5 +354,214 @@ class HomeController extends GetxController {
       ));
     });
     update();
+  }
+
+  fetchListLiked() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = prefs.getInt('user_id') ?? 0;
+    if (id == 0) {
+      Get.to(ScreenLogin());
+    } else {
+      var response = await http.post(
+          Uri.parse("${BaseUrl.getBaseUrl()}getPostLiked.php"),
+          body: {'user_id': '$id'});
+      var result = await json.decode(response.body);
+      if (result['success']) {
+        result['result'].forEach((item) {
+          listLiked.add(int.parse(item['post_id']));
+        });
+      }
+      //print(listLiked.length);
+      update();
+    }
+  }
+
+  fetchListReact() async {
+    var response =
+        await http.post(Uri.parse("${BaseUrl.getBaseUrl()}getallreact.php"));
+    var result = await json.decode(response.body);
+    result['react_list'].forEach((v) {
+      int id = int.parse(v['id']);
+      int postId = int.parse(v['post_id']);
+      int userId = int.parse(v['user_id']);
+      String reactTime = v['react_time'];
+      listReact.add(
+          React(id: id, postId: postId, userId: userId, reactTime: reactTime));
+    });
+    update();
+  }
+
+  getCountReact(int postId) {
+    int count = listReact.where((element) => element.postId == postId).length;
+    update();
+    return count;
+  }
+
+  updateCountReact() {}
+
+  getPostLocal() {
+    List<Post> list = <Post>[];
+    // All
+    if (selectedLocal == 1) {
+      list = <Post>[];
+      list = [...listAllPost];
+      update();
+    }
+    // Group
+    else if (selectedLocal == 2) {
+      list = <Post>[];
+      list = [...listPostExplore];
+      update();
+    }
+    // Followed
+    else {
+      list = <Post>[];
+      list = [...listPostFollow];
+      update();
+    }
+    update();
+    return list;
+  }
+
+  getListCommentByID(int postId) {
+    List<Comment> cmtByIdPost = <Comment>[];
+    for (var element in listComment) {
+      if (element.postId == postId) {
+        cmtByIdPost.add(element);
+      }
+    }
+    update();
+    return cmtByIdPost;
+  }
+
+// Thực hiện Like bài viết
+  likeAction(int postId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = prefs.getInt('user_id') ?? 0;
+    if (id == 0) {
+      Get.to(ScreenLogin());
+    } else {
+      // Khi người dùng đã đăng nhập
+      var response = await http
+          .post(Uri.parse("${BaseUrl.getBaseUrl()}likeaction.php"), body: {
+        'user_id': '$id',
+        'post_id': '$postId',
+      });
+      update();
+      var result = await json.decode(response.body);
+      // Hoạt động huỷ like
+      if (result['state'] == 'unlike') {
+        // Loại bỏ postId ra khỏi danh sách bài viết đã like (cập nhật màu heart)
+        listLiked.remove(postId);
+
+        // Loại bỏ React ra khỏi danh sách tổng hợp React (  )
+        for (var e in listReact) {
+          if (e.postId == postId) {
+            listReact.remove(e);
+          }
+        }
+
+        update();
+      } else {
+        var dataInserted = result['dataInserted'];
+        listLiked.add(postId);
+        listReact.add(React(
+            id: int.parse(dataInserted['id']),
+            postId: int.parse(dataInserted['post_id']),
+            userId: int.parse(dataInserted['user_id']),
+            reactTime: dataInserted['react_time']));
+
+        update();
+      }
+      update();
+    }
+  }
+//
+//
+//
+//
+
+// save action
+  fetchListSave() async {
+    var response =
+        await http.post(Uri.parse("${BaseUrl.getBaseUrl()}getallsave.php"));
+    var result = await json.decode(response.body);
+    result['save_list'].forEach((v) {
+      int id = int.parse(v['id']);
+      int postId = int.parse(v['post_id']);
+      int userId = int.parse(v['user_id']);
+      listSave.add(Save(id: id, postId: postId, userId: userId));
+    });
+
+    update();
+  }
+
+  fectListSavedByUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userId = prefs.getInt('user_id') ?? 0;
+    //
+    //
+    //
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}getpostsaved.php"), body: {
+      'user_id': userId.toString(),
+    });
+    var result = await json.decode(response.body);
+    result['result'].forEach((v) {
+      //int id = int.parse(v['id']);
+      int postId = int.parse(v['post_id']);
+      //int userId = int.parse(v['user_id']);
+      listSavedByUserID.add(postId);
+    });
+
+    update();
+  }
+
+  getCountSave(int postId) {
+    int count = listSave.where((element) => element.postId == postId).length;
+    update();
+    return count;
+  }
+
+  saveAction(int postId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    id = prefs.getInt('user_id') ?? 0;
+    if (id == 0) {
+      Get.to(ScreenLogin());
+    } else {
+      // Khi người dùng đã đăng nhập
+      var response = await http
+          .post(Uri.parse("${BaseUrl.getBaseUrl()}saveaction.php"), body: {
+        'user_id': '$id',
+        'post_id': '$postId',
+      });
+      update();
+      var result = await json.decode(response.body);
+      // Hoạt động huỷ like
+      if (result['state'] == 'unsave') {
+        // Loại bỏ postId ra khỏi danh sách bài viết đã like (cập nhật màu heart)
+        listSavedByUserID.remove(postId);
+
+        // Loại bỏ React ra khỏi danh sách tổng hợp React (  )
+        for (var e in listSave) {
+          if (e.postId == postId) {
+            listSave.remove(e);
+          }
+        }
+
+        update();
+      } else {
+        var dataInserted = result['dataInserted'];
+        listSavedByUserID.add(postId);
+        listSave.add(Save(
+          id: int.parse(dataInserted['id']),
+          postId: int.parse(dataInserted['post_id']),
+          userId: int.parse(dataInserted['user_id']),
+        ));
+
+        update();
+      }
+      update();
+    }
   }
 }

@@ -8,5 +8,5 @@ class MyColor {
       textHomeColor = const Color(0xffFF8A66),
       heartColor = const Color(0xffFF5B5B),
       bookMarkColor = const Color(0xff5ACACE),
-      commentColor = Color(0xff9B7DEE);
+      commentColor = const Color(0xff9B7DEE);
 }

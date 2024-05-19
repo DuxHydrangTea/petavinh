@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 // ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
+// ignore: depend_on_referenced_packages
+import 'package:http/http.dart' as http;
 import 'package:petavinh/config/base_url.dart';
 import 'package:petavinh/config/loader_widget.dart';
 import 'package:petavinh/config/my_snack_bar.dart';
-// ignore: depend_on_referenced_packages
-import 'package:http/http.dart' as http;
 import 'package:petavinh/views/screen_home.dart';
 // ignore: depend_on_referenced_packages
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,9 +55,9 @@ class LoginController extends GetxController {
       await prefs.setInt('user_id', int.parse(res['user']['id']));
       await prefs.setString('username', res['user']['username']);
 
-      Get.to(const ScreenHome());
+      Get.offAll(() => const ScreenHome());
     } else {
-      mySnackBar("Login", "False", false);
+      mySnackBar("Lỗi đăng nhập", "Sai tài khoản hoặc mật khẩu", false);
     }
   }
 
