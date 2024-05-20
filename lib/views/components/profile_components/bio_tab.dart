@@ -4,7 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myfontweight.dart';
+import 'package:petavinh/utils/mytime.dart';
 
+// ignore: must_be_immutable
 class BioTab extends StatelessWidget {
   String bioText, joinTime;
   BioTab({super.key, required this.bioText, required this.joinTime});
@@ -60,7 +62,7 @@ class BioTab extends StatelessWidget {
                 size: 14,
               ),
               const Gap(10),
-              Text("Joined at $joinTime")
+              Text("Joined at ${MyTime.cvtTime(joinTime)}")
             ],
           )
         ],

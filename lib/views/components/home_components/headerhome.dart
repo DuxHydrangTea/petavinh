@@ -13,12 +13,14 @@ class HeaderHome extends StatelessWidget {
   String avatar;
   VoidCallback logout;
   VoidCallback onDrawer;
+  VoidCallback showSheet;
   HeaderHome(
       {super.key,
       required this.helloUsername,
       required this.logout,
       required this.onDrawer,
-      required this.avatar});
+      required this.avatar,
+      required this.showSheet});
 
   @override
   Widget build(BuildContext context) {
@@ -87,25 +89,28 @@ class HeaderHome extends StatelessWidget {
                   ),
                 ),
               ),
-              child: Row(
-                children: [
-                  ContainerBorder(
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(avatar),
-                      radius: 15,
+              child: GestureDetector(
+                onTap: showSheet,
+                child: Row(
+                  children: [
+                    ContainerBorder(
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage(avatar),
+                        radius: 15,
+                      ),
                     ),
-                  ),
-                  const Gap(5),
-                  Text(
-                    "$helloUsername What do your pet today?",
-                    style: const TextStyle(fontWeight: MyFontWeight.medium),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    FontAwesomeIcons.image,
-                    color: MyColor.mainColor,
-                  )
-                ],
+                    const Gap(5),
+                    Text(
+                      "$helloUsername What do your pet today?",
+                      style: const TextStyle(fontWeight: MyFontWeight.medium),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      FontAwesomeIcons.image,
+                      color: MyColor.mainColor,
+                    )
+                  ],
+                ),
               ))
         ],
       ),

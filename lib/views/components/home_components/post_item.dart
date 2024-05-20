@@ -12,6 +12,7 @@ import 'package:petavinh/views/components/container_border.dart';
 import 'package:petavinh/views/components/detailpost_components/list_comments.dart';
 import 'package:petavinh/views/components/my_hero.dart';
 import 'package:petavinh/views/screen_post.dart';
+import 'package:readmore/readmore.dart';
 
 // ignore: must_be_immutable
 class PostItem extends StatelessWidget {
@@ -174,7 +175,14 @@ class PostItem extends StatelessWidget {
             ),
             const Gap(5),
             // content
-            Text(post.content),
+            ReadMoreText(
+              post.content,
+              trimMode: TrimMode.Line,
+              trimLines: 2,
+              colorClickableText: Colors.pink,
+              trimCollapsedText: '...Show more ->',
+              trimExpandedText: '   <- Show less',
+            ),
             const Gap(5),
             // image
             GestureDetector(

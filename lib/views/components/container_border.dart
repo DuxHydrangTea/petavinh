@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+// ignore: must_be_immutable
 class ContainerBorder extends StatelessWidget {
   Widget? child;
   ContainerBorder({super.key, this.child});

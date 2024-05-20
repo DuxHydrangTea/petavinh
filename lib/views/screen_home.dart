@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:petavinh/config/myfontweight.dart';
 import 'package:petavinh/controllers/homecontroller.dart';
 import 'package:petavinh/models/topic.dart';
+import 'package:petavinh/views/components/container_border.dart';
 import 'package:petavinh/views/components/home_components/chip_item.dart';
 import 'package:petavinh/views/components/home_components/headerhome.dart';
 import 'package:petavinh/views/components/home_components/listchip_bar.dart';
@@ -12,6 +16,8 @@ import 'package:petavinh/views/components/home_components/post_item.dart';
 import 'package:petavinh/views/components/home_components/ratest_post_card.dart';
 import 'package:petavinh/views/components/listSelect/mylistchip.dart';
 import 'package:petavinh/views/components/my_drawer.dart';
+// ignore: unused_import
+import 'package:readmore/readmore.dart';
 
 class ScreenHome extends StatelessWidget {
   const ScreenHome({super.key});
@@ -25,9 +31,12 @@ class ScreenHome extends StatelessWidget {
         return Scaffold(
           key: controller.scaffoldKey,
           endDrawer: Drawer(
-            child: MyDrawer(onPressLogOut: () {
-              controller.logout();
-            }),
+            child: MyDrawer(
+              onPressLogOut: () {
+                controller.logout();
+              },
+              user: controller.userProfile,
+            ),
           ),
           body: SingleChildScrollView(
             child: SafeArea(
@@ -44,6 +53,177 @@ class ScreenHome extends StatelessWidget {
                     onDrawer: () {
                       controller.openDrawer();
                     },
+                    showSheet: () => showModalBottomSheet(
+                      enableDrag: true,
+                      isScrollControlled: true,
+                      context: context,
+                      //
+                      //
+                      // SHEET WRITE POST
+                      //
+                      //
+                      builder: (context) => Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Scaffold(
+                            appBar: AppBar(),
+                            body: SingleChildScrollView(
+                              child: SafeArea(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ContainerBorder(
+                                            child: CircleAvatar(
+                                              radius: 24,
+                                              backgroundImage: AssetImage(
+                                                  controller
+                                                      .userProfile.avatar),
+                                            ),
+                                          ),
+                                          const Gap(10),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                controller.userProfile.fullname,
+                                                style: const TextStyle(
+                                                  fontWeight:
+                                                      MyFontWeight.semiBold,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Obx(() => Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 10,
+                                                      ),
+                                                      height: 30,
+                                                      //width: 215,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color: Color(
+                                                                  0xff9B7DEE),
+                                                              border: Border(),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    5),
+                                                              )),
+                                                      child: DropdownButton(
+                                                        iconEnabledColor:
+                                                            Colors.white,
+                                                        dropdownColor:
+                                                            const Color(
+                                                                0xff9B7DEE),
+                                                        underline: Container(),
+                                                        value: controller
+                                                            .wIdTopic.value,
+                                                        hint: const Text(
+                                                            "Choose any topic.."),
+                                                        onChanged:
+                                                            (int? valueN) {
+                                                          controller
+                                                              .changeWriteIdTopic(
+                                                                  valueN!);
+                                                        },
+                                                        items: controller
+                                                            .listTopic
+                                                            .map((e) =>
+                                                                DropdownMenuItem(
+                                                                  value: e.id,
+                                                                  child: Text(
+                                                                    e.topicname!,
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                ))
+                                                            .toList(),
+                                                      ))),
+                                                  const Gap(10),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      controller.imagePicker(
+                                                          ImageSource.gallery);
+                                                    },
+                                                    child: const FaIcon(
+                                                      size: 30,
+                                                      FontAwesomeIcons.image,
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      const Gap(10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                        ),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(5)),
+                                            border: Border.all(
+                                              color: const Color(0xffD9D9D9),
+                                            )),
+                                        child: TextFormField(
+                                          maxLines: 10,
+                                          keyboardType: TextInputType.multiline,
+                                          decoration: const InputDecoration(
+                                            hintText: "Text your content",
+                                            border: InputBorder.none,
+                                          ),
+                                        ),
+                                      ),
+                                      const Gap(10),
+                                      Obx(() => (controller.image.value.path !=
+                                              ""
+                                          ? Image.file(controller.image.value)
+                                          : Container())),
+                                      const Gap(10),
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        height: 40,
+                                        width: 100,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          color: Colors.green,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                        ),
+                                        child: const Center(
+                                            child: Text(
+                                          "Post",
+                                          style: TextStyle(
+                                            fontWeight: MyFontWeight.semiBold,
+                                            color: Colors.white,
+                                          ),
+                                        )),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                   const Gap(10),
                   ListChipBar(

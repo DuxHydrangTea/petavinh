@@ -11,7 +11,6 @@ import 'package:petavinh/utils/mytime.dart';
 import 'package:petavinh/views/components/container_border.dart';
 import 'package:petavinh/views/components/detailpost_components/comment_item.dart';
 import 'package:petavinh/views/components/my_hero.dart';
-import 'package:petavinh/views/sheet_list_comment.dart';
 
 // ignore: must_be_immutable
 class ScreenPost extends StatelessWidget {
@@ -184,62 +183,63 @@ class ScreenPost extends StatelessWidget {
                     ),
                   ),
                   // action
+                  const Gap(15),
                   const Divider(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton.icon(
-                          onPressed: null,
-                          style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(0)),
-                          icon: const FaIcon(
-                            FontAwesomeIcons.heart,
-                            color: Colors.black,
-                          ),
-                          label: Text(
-                            post.numLike.toString(),
-                            style: const TextStyle(
-                              color: Colors.black,
-                            ),
-                          )),
-                      TextButton.icon(
-                          onPressed: () => showModalBottomSheet(
-                                enableDrag: true,
-                                isScrollControlled: true,
-                                context: context,
-                                builder: (context) => ScreenSheetListComment(
-                                  listComment: const [],
-                                ),
-                              ),
-                          style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(0)),
-                          icon: const FaIcon(
-                            FontAwesomeIcons.comment,
-                            color: Colors.black,
-                          ),
-                          label: const Text(
-                            "0",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          )),
-                      TextButton.icon(
-                          onPressed: null,
-                          style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(0)),
-                          icon: const FaIcon(
-                            FontAwesomeIcons.bookmark,
-                            color: Colors.black,
-                          ),
-                          label: Text(
-                            post.numSave.toString(),
-                            style: const TextStyle(
-                              color: Colors.black,
-                            ),
-                          ))
-                    ],
-                  ),
-                  const Divider(),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     TextButton.icon(
+                  //         onPressed: null,
+                  //         style: TextButton.styleFrom(
+                  //             padding: const EdgeInsets.all(0)),
+                  //         icon: const FaIcon(
+                  //           FontAwesomeIcons.heart,
+                  //           color: Colors.black,
+                  //         ),
+                  //         label: Text(
+                  //           post.numLike.toString(),
+                  //           style: const TextStyle(
+                  //             color: Colors.black,
+                  //           ),
+                  //         )),
+                  //     TextButton.icon(
+                  //         onPressed: () => showModalBottomSheet(
+                  //               enableDrag: true,
+                  //               isScrollControlled: true,
+                  //               context: context,
+                  //               builder: (context) => ScreenSheetListComment(
+                  //                 listComment: const [],
+                  //               ),
+                  //             ),
+                  //         style: TextButton.styleFrom(
+                  //             padding: const EdgeInsets.all(0)),
+                  //         icon: const FaIcon(
+                  //           FontAwesomeIcons.comment,
+                  //           color: Colors.black,
+                  //         ),
+                  //         label: const Text(
+                  //           "0",
+                  //           style: TextStyle(
+                  //             color: Colors.black,
+                  //           ),
+                  //         )),
+                  //     TextButton.icon(
+                  //         onPressed: null,
+                  //         style: TextButton.styleFrom(
+                  //             padding: const EdgeInsets.all(0)),
+                  //         icon: const FaIcon(
+                  //           FontAwesomeIcons.bookmark,
+                  //           color: Colors.black,
+                  //         ),
+                  //         label: Text(
+                  //           post.numSave.toString(),
+                  //           style: const TextStyle(
+                  //             color: Colors.black,
+                  //           ),
+                  //         ))
+                  //   ],
+                  // ),
+                  // const Divider(),
                   const Gap(15),
 
                   // ===============================
@@ -257,6 +257,9 @@ class ScreenPost extends StatelessWidget {
                       const Gap(15),
                       Expanded(
                         child: TextFormField(
+                          minLines: 1,
+                          maxLines: 5,
+                          keyboardType: TextInputType.multiline,
                           controller: controller.commentText,
                           decoration: const InputDecoration(
                             isDense: true,

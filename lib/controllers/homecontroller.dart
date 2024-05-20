@@ -1,12 +1,15 @@
 // ignore: unused_import
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
 // ignore: unused_import, depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 // ignore: unused_import
 import 'package:petavinh/config/base_url.dart';
 // ignore: unused_import
@@ -66,7 +69,17 @@ class HomeController extends GetxController {
   // Danh sách tổng hợp các Save
   List<Save> listSave = <Save>[];
   User userProfile = User();
-
+//
+//
+//
+//
+//      WRITE POST
+  var wIdTopic = 1.obs;
+  Rx<File> image = File("").obs;
+//
+//
+//
+//
   var scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void onInit() {
@@ -600,5 +613,32 @@ class HomeController extends GetxController {
       update();
     }
     update();
+  }
+
+//
+//
+//
+//
+//      WRITE POST ACTION
+  changeWriteIdTopic(int value) {
+    wIdTopic.value = value;
+    //update();
+    //print(wIdTopic);
+  }
+
+  imagePicker(ImageSource imgS) async {
+    try {
+      final imagePick = await ImagePicker().pickImage(source: imgS);
+      if (imagePick == null) {
+        return;
+      } else {
+        image.value = File("");
+        final imageTemp = File(imagePick.path);
+        image.value = imageTemp;
+        update();
+      }
+    } on PlatformException catch (e) {
+      return e;
+    }
   }
 }

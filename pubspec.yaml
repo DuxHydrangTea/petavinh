@@ -50,6 +50,8 @@ dev_dependencies:
   drop_cap_text: ^1.1.3
   fluttertoast: ^8.2.5
   intl: ^0.17.0
+  readmore: ^3.0.0
+  image_picker: ^1.1.1
 flutter:
   uses-material-design: true
   assets:

@@ -5,6 +5,7 @@ import 'package:petavinh/config/myfontweight.dart';
 import 'package:petavinh/models/user.dart';
 import 'package:petavinh/views/components/container_border.dart';
 
+// ignore: must_be_immutable
 class FollowersTab extends StatelessWidget {
   List<User> listMeFollow;
   FollowersTab({super.key, required this.listMeFollow});

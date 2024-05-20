@@ -3,10 +3,13 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myfontweight.dart';
+import 'package:petavinh/models/user.dart';
 
+// ignore: must_be_immutable
 class MyDrawer extends StatelessWidget {
   VoidCallback onPressLogOut;
-  MyDrawer({super.key, required this.onPressLogOut});
+  User user;
+  MyDrawer({super.key, required this.onPressLogOut, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -39,25 +42,24 @@ class MyDrawer extends StatelessWidget {
                     ),
                     child: GestureDetector(
                       onTap: () {},
-                      child: const CircleAvatar(
+                      child: CircleAvatar(
                         radius: 70,
-                        backgroundImage:
-                            AssetImage("assets/images/avatar1.jpg"),
+                        backgroundImage: AssetImage(user.avatar),
                       ),
                     ),
                   ),
                   const Gap(10),
-                  const Text(
-                    "Nguyen Ngoc Dung",
-                    style: TextStyle(
+                  Text(
+                    user.fullname,
+                    style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
                       fontWeight: MyFontWeight.bold,
                     ),
                   ),
-                  const Text(
-                    "@ngocdung",
-                    style: TextStyle(
+                  Text(
+                    "@${user.username}",
+                    style: const TextStyle(
                       fontSize: 15,
                       color: Colors.white,
                       fontWeight: MyFontWeight.medium,
