@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:petavinh/config/mycolor.dart';
@@ -29,7 +31,8 @@ class FollowersTab extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 20,
                             backgroundImage:
-                                AssetImage(listMeFollow[index].avatar),
+                                Image.file(File(listMeFollow[index].avatar))
+                                    .image,
                           ),
                         ),
                         const Gap(10),

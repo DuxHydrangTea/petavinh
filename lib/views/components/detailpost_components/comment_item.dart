@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -23,7 +25,7 @@ class CommentItem extends StatelessWidget {
               children: [
                 ContainerBorder(
                   child: CircleAvatar(
-                    backgroundImage: AssetImage(comment.avatar),
+                    backgroundImage: Image.file(File(comment.avatar)).image,
                   ),
                 ),
                 const Gap(10),

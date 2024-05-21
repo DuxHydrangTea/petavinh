@@ -76,6 +76,8 @@ class HomeController extends GetxController {
 //      WRITE POST
   var wIdTopic = 1.obs;
   Rx<File> image = File("").obs;
+  late TextEditingController contentController;
+  late TextEditingController titleController;
 //
 //
 //
@@ -112,6 +114,16 @@ class HomeController extends GetxController {
     fetchListSave();
     fectListSavedByUser();
     fetchUserProfile();
+    titleController = TextEditingController();
+    contentController = TextEditingController();
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    titleController.dispose();
+    contentController.dispose();
   }
 
   void openDrawer() {
@@ -162,44 +174,46 @@ class HomeController extends GetxController {
         Uri.parse("${BaseUrl.getBaseUrl()}getLocalPostInGroup.php"),
         body: {'user_id': '$userId'});
     var result = await json.decode(response.body);
-    result['allpost'].forEach((v) {
-      int id = int.parse(v['id']);
-      String title = v['title'];
-      String content = v['content'];
-      int userId = int.parse(v['user_id']);
-      String fullname = v['fullname'];
-      String avatar = v['avatar'];
-      int topicId = int.parse(v['topic_id']);
-      String topicname = v['topicname'];
-      int groupId = int.parse(v['group_id']);
-      String groupName = v['groupname'] ?? "";
-      String groupImage = v['groupimage'] ?? "";
+    if (result['success']) {
+      result['allpost'].forEach((v) {
+        int id = int.parse(v['id']);
+        String title = v['title'];
+        String content = v['content'];
+        int userId = int.parse(v['user_id']);
+        String fullname = v['fullname'];
+        String avatar = v['avatar'];
+        int topicId = int.parse(v['topic_id']);
+        String topicname = v['topicname'];
+        int groupId = int.parse(v['group_id']);
+        String groupName = v['groupname'] ?? "";
+        String groupImage = v['groupimage'] ?? "";
 
-      String image = v['image'];
-      String postedDate = v['posted_date'];
-      int approve = int.parse(v['approve']);
-      int numLike = int.parse(v['NUMLIKE']);
-      int numCmt = int.parse(v['NUMCMT']);
-      int numSave = int.parse(v['NUMSAVE']);
-      listPostExplore.add(Post(
-          id: id,
-          title: title,
-          content: content,
-          userId: userId,
-          fullname: fullname,
-          avatar: avatar,
-          topicId: topicId,
-          topicname: topicname,
-          groupId: groupId,
-          groupName: groupName,
-          groupImage: groupImage,
-          image: image,
-          postedDate: postedDate,
-          approve: approve,
-          numLike: numLike,
-          numCmt: numCmt,
-          numSave: numSave));
-    });
+        String image = v['image'];
+        String postedDate = v['posted_date'];
+        int approve = int.parse(v['approve']);
+        int numLike = int.parse(v['NUMLIKE']);
+        int numCmt = int.parse(v['NUMCMT']);
+        int numSave = int.parse(v['NUMSAVE']);
+        listPostExplore.add(Post(
+            id: id,
+            title: title,
+            content: content,
+            userId: userId,
+            fullname: fullname,
+            avatar: avatar,
+            topicId: topicId,
+            topicname: topicname,
+            groupId: groupId,
+            groupName: groupName,
+            groupImage: groupImage,
+            image: image,
+            postedDate: postedDate,
+            approve: approve,
+            numLike: numLike,
+            numCmt: numCmt,
+            numSave: numSave));
+      });
+    }
     developer.log("${listPostExplore.length}");
     update();
   }
@@ -639,6 +653,30 @@ class HomeController extends GetxController {
       }
     } on PlatformException catch (e) {
       return e;
+    }
+  }
+
+  onPost() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userID = prefs.getInt('user_id') ?? 0;
+    String title = titleController.text;
+    String content = contentController.text;
+    int topicID = wIdTopic.value;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}createPublicPost.php"), body: {
+      'title': title,
+      'content': content,
+      'user_id': userID.toString(),
+      'topic_id': topicID.toString(),
+      'image': image.value.path,
+    });
+
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      Get.snackbar("Thông báo", "Đăng bài thành công !");
+      Get.offAllNamed("/");
+    } else {
+      Get.snackbar("Thông báo", "Đăng bài thất bại !");
     }
   }
 }

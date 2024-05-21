@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -44,7 +46,8 @@ class MyDrawer extends StatelessWidget {
                       onTap: () {},
                       child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: AssetImage(user.avatar),
+                        //backgroundImage: AssetImage(user.avatar),
+                        backgroundImage: Image.file(File(user.avatar)).image,
                       ),
                     ),
                   ),

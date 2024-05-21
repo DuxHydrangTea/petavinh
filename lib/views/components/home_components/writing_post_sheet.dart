@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:petavinh/config/myfontweight.dart';
-import 'package:petavinh/views/components/container_border.dart';
 
 class WritingPostSheet extends StatelessWidget {
   const WritingPostSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    int valueSampe = 1;
     return Container(
       color: Colors.white,
       child: Padding(
@@ -27,13 +25,14 @@ class WritingPostSheet extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ContainerBorder(
-                          child: const CircleAvatar(
-                            radius: 24,
-                            backgroundImage:
-                                AssetImage("assets/images/avatar1.jpg"),
-                          ),
-                        ),
+                        // ContainerBorder(
+                        //   child: CircleAvatar(
+                        //     radius: 24,
+                        //     backgroundImage:
+                        //         Image.file(File("assets/images/avatar1.jpg"))
+                        //             .image,
+                        //   ),
+                        // ),
                         const Gap(10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

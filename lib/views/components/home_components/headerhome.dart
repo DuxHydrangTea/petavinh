@@ -1,5 +1,6 @@
 // ignore: unnecessary_import
-import 'package:flutter/animation.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -95,7 +96,7 @@ class HeaderHome extends StatelessWidget {
                   children: [
                     ContainerBorder(
                       child: CircleAvatar(
-                        backgroundImage: AssetImage(avatar),
+                        backgroundImage: Image.file(File(avatar)).image,
                         radius: 15,
                       ),
                     ),

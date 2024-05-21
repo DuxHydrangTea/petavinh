@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:petavinh/config/myfontweight.dart';
@@ -28,7 +30,8 @@ class FollowedTab extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 20,
                             backgroundImage:
-                                AssetImage(listFollowed[index].avatar),
+                                Image.file(File(listFollowed[index].avatar))
+                                    .image,
                           ),
                         ),
                         const Gap(10),

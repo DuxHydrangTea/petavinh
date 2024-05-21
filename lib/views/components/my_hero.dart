@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +25,7 @@ class MyHeroAlbum extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(tag),
+                    Image.file(File(tag)),
                     Text(description),
                   ]),
             ),

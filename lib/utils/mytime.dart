@@ -20,9 +20,12 @@ class MyTime {
   }
 
   static String cvtTime(String time) {
-    DateTime dateTime = DateTime.parse(time);
-    DateFormat dateFormat = DateFormat('d MMMM yyyy');
-    String formattedDate = dateFormat.format(dateTime);
+    String formattedDate = "NaN Days";
+    if (time != "") {
+      DateTime dateTime = DateTime.parse(time);
+      DateFormat dateFormat = DateFormat('d MMMM yyyy');
+      formattedDate = dateFormat.format(dateTime);
+    }
     return formattedDate;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -57,8 +59,8 @@ class PostGroupItem extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: Image.asset(
-                    post.groupImage,
+                  child: Image.file(
+                    File(post.groupImage),
                     height: 40,
                     width: 40,
                     fit: BoxFit.cover,
@@ -91,11 +93,12 @@ class PostGroupItem extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 10,
-                          backgroundImage: AssetImage(post.avatar),
+                          //backgroundImage: Image.file(File(post.avatar)).image,
+                          backgroundImage: Image.file(File(post.avatar)).image,
                         ),
                         const Gap(5),
                         Text(
-                          post.fullname,
+                          "post.fullname",
                           style: TextStyle(
                               fontWeight: MyFontWeight.medium,
                               color: MyColor.outlineColor),
@@ -166,8 +169,8 @@ class PostGroupItem extends StatelessWidget {
               },
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
-                child: Image.asset(
-                  post.image,
+                child: Image.file(
+                  File(post.image),
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),

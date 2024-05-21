@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -60,7 +62,8 @@ class PostItem extends StatelessWidget {
               children: [
                 ContainerBorder(
                   child: CircleAvatar(
-                    backgroundImage: AssetImage(post.avatar),
+                    backgroundImage: Image.file(File(post.avatar)).image,
+                    // backgroundImage: AssetImage("assets/images/avatar1.jpg"),
                   ),
                 ),
                 const Gap(8),
@@ -194,8 +197,9 @@ class PostItem extends StatelessWidget {
               },
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
-                child: Image.asset(
-                  post.image,
+                //child: Image.file(File(post.image),
+                child: Image.file(
+                  File(post.image),
                   width: double.infinity,
                 ),
               ),

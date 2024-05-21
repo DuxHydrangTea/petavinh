@@ -162,19 +162,21 @@ class ProfileController extends GetxController {
       'user_id': userID.toString(),
     });
     var result = await json.decode(response.body);
-    result['follower'].forEach((e) {
-      listUserMeFollow.add(User(
-        id: int.parse(e['followed_id']),
-        username: e['username'],
-        password: e['password'],
-        fullname: e['fullname'],
-        avatar: e['avatar'],
-        joinedTime: e['joined_time'],
-        description: e['description'],
-        isAdmin: int.parse(e['isAdmin']),
-      ));
-    });
-    print(listUserMeFollow);
+    if (result['success']) {
+      result['follower'].forEach((e) {
+        listUserMeFollow.add(User(
+          id: int.parse(e['followed_id']),
+          username: e['username'],
+          password: e['password'],
+          fullname: e['fullname'],
+          avatar: e['avatar'],
+          joinedTime: e['joined_time'],
+          description: e['description'],
+          isAdmin: int.parse(e['isAdmin']),
+        ));
+      });
+    }
+
     update();
   }
 

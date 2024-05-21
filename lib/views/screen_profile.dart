@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -75,7 +77,7 @@ class ScreenProfile extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 70,
                       backgroundImage:
-                          AssetImage(controller.userProfile.avatar),
+                          Image.file(File(controller.userProfile.avatar)).image,
                     ),
                   ),
                 ),

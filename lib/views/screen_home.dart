@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -83,9 +85,10 @@ class ScreenHome extends StatelessWidget {
                                           ContainerBorder(
                                             child: CircleAvatar(
                                               radius: 24,
-                                              backgroundImage: AssetImage(
-                                                  controller
-                                                      .userProfile.avatar),
+                                              backgroundImage: Image.file(File(
+                                                      controller
+                                                          .userProfile.avatar))
+                                                  .image,
                                             ),
                                           ),
                                           const Gap(10),
@@ -171,6 +174,26 @@ class ScreenHome extends StatelessWidget {
                                       ),
                                       const Gap(10),
                                       Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
+                                              border: Border.all(
+                                                color: const Color(0xffD9D9D9),
+                                              )),
+                                          child: TextFormField(
+                                            controller:
+                                                controller.titleController,
+                                            decoration: const InputDecoration(
+                                              hintText: "Text your title",
+                                              border: InputBorder.none,
+                                            ),
+                                          )),
+                                      const Gap(10),
+                                      Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 12,
                                         ),
@@ -182,6 +205,8 @@ class ScreenHome extends StatelessWidget {
                                               color: const Color(0xffD9D9D9),
                                             )),
                                         child: TextFormField(
+                                          controller:
+                                              controller.contentController,
                                           maxLines: 10,
                                           keyboardType: TextInputType.multiline,
                                           decoration: const InputDecoration(
@@ -191,29 +216,37 @@ class ScreenHome extends StatelessWidget {
                                         ),
                                       ),
                                       const Gap(10),
-                                      Obx(() => (controller.image.value.path !=
-                                              ""
-                                          ? Image.file(controller.image.value)
-                                          : Container())),
+                                      Obx(
+                                        () => controller.image.value.path != ""
+                                            ? Image.file(controller.image.value)
+
+                                            ///data/user/0/com.example.petavinh/cache/d2fdac33-f36c-425e-821a-1b9e5f3307fe/2020-07-28.jpg
+                                            : Container(),
+                                      ),
                                       const Gap(10),
-                                      Container(
-                                        padding: const EdgeInsets.all(10),
-                                        height: 40,
-                                        width: 100,
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.rectangle,
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5)),
-                                        ),
-                                        child: const Center(
-                                            child: Text(
-                                          "Post",
-                                          style: TextStyle(
-                                            fontWeight: MyFontWeight.semiBold,
-                                            color: Colors.white,
+                                      GestureDetector(
+                                        onTap: () {
+                                          controller.onPost();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          height: 40,
+                                          width: 100,
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.rectangle,
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(5)),
                                           ),
-                                        )),
+                                          child: const Center(
+                                              child: Text(
+                                            "Post",
+                                            style: TextStyle(
+                                              fontWeight: MyFontWeight.semiBold,
+                                              color: Colors.white,
+                                            ),
+                                          )),
+                                        ),
                                       )
                                     ],
                                   ),

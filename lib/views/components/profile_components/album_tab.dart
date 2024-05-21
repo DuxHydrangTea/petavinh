@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:petavinh/views/components/my_hero.dart';
@@ -35,12 +37,15 @@ class AlbumTab extends StatelessWidget {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5)),
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(album[index]['image'] ??
-                                    "assets/images/errorIMG.png"))),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(5)),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: FileImage(
+                              File(album[index]['image'] ?? ""),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
