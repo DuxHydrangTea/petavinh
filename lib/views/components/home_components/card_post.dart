@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myeffect.dart';
 import 'package:petavinh/config/myfontweight.dart';
-import 'package:petavinh/models/comment.dart';
 import 'package:petavinh/models/post.dart';
 import 'package:petavinh/utils/mytime.dart';
 import 'package:petavinh/views/components/container_border.dart';
@@ -16,15 +15,16 @@ import 'package:petavinh/views/screen_post.dart';
 // ignore: must_be_immutable
 class CardPost extends StatelessWidget {
   Post post;
-  List<Comment> listCmt;
-  CardPost({super.key, required this.post, required this.listCmt});
+  int? countLike;
+  int? countSave;
+  CardPost({super.key, required this.post, this.countLike, this.countSave});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Get.to(() => ScreenPost(
               post: post,
-              listComment: listCmt,
+              //listComment: listCmt,
             ));
       },
       child: Container(
@@ -137,7 +137,7 @@ class CardPost extends StatelessWidget {
                             size: 13,
                           ),
                           label: Text(
-                            post.numCmt.toString(),
+                            countLike.toString(),
                             style: TextStyle(color: MyColor.heartColor),
                           )),
                       const Gap(5),
@@ -152,7 +152,7 @@ class CardPost extends StatelessWidget {
                             size: 13,
                           ),
                           label: Text(
-                            post.numSave.toString(),
+                            countSave.toString(),
                             style: TextStyle(color: MyColor.bookMarkColor),
                           )),
                     ],

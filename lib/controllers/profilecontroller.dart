@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 // ignore: depend_on_referenced_packages
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:petavinh/config/base_url.dart';
 import 'package:petavinh/models/post.dart';
 import 'package:petavinh/models/user.dart';
@@ -18,12 +22,26 @@ class ProfileController extends GetxController {
 
   List<Map<String, String>> album = <Map<String, String>>[];
   List<Post> listMyPosts = <Post>[];
-  List<User> listFollowed = <User>[];
+  List<User> listUserFollowMe = <User>[];
   List<User> listUserMeFollow = <User>[];
+  Rx<File> avatar = File("").obs;
+//
+//      Edit BIO
+//
+  late TextEditingController bioController;
+
+//
+//
+
   @override
   // ignore: unnecessary_overrides
   void onInit() {
     super.onInit();
+    album = <Map<String, String>>[];
+    listMyPosts = <Post>[];
+    listUserFollowMe = <User>[];
+    listUserMeFollow = <User>[];
+    avatar = File("").obs;
     fetchUserProfile();
     fetchUserAlbum();
     fetchMyPosts();
@@ -35,6 +53,7 @@ class ProfileController extends GetxController {
   // ignore: unnecessary_overrides
   void onClose() {
     super.onClose();
+    bioController.dispose();
   }
 
   fetchUserProfile() async {
@@ -60,6 +79,7 @@ class ProfileController extends GetxController {
         isAdmin: int.parse(user['isAdmin']),
       );
       update();
+      bioController = TextEditingController(text: user['description']);
     }
     update();
   }
@@ -140,7 +160,7 @@ class ProfileController extends GetxController {
     });
     var result = await json.decode(response.body);
     result['follower'].forEach((e) {
-      listFollowed.add(User(
+      listUserFollowMe.add(User(
         id: int.parse(e['following_id']),
         username: e['username'],
         password: e['password'],
@@ -178,6 +198,97 @@ class ProfileController extends GetxController {
     }
 
     update();
+  }
+
+  removeFollow(int followingId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int followedId = prefs.getInt('user_id') ?? 0;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}removefollow.php"), body: {
+      'followed_id': followedId.toString(),
+      'following_id': followingId.toString(),
+    });
+    var result = json.decode(response.body);
+    if (result['success']) {
+      listUserFollowMe.removeWhere((element) => element.id == followingId);
+      Get.snackbar("Thông báo", "Huỷ theo dõi thành công");
+      update();
+    } else {
+      Get.snackbar("Thông báo", "Huỷ theo dõi thất bại");
+    }
+  }
+
+  unfollow(int followedId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int followingId = prefs.getInt('user_id') ?? 0;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}unfollow.php"), body: {
+      'followed_id': followedId.toString(),
+      'following_id': followingId.toString(),
+    });
+    var result = json.decode(response.body);
+    if (result['success']) {
+      listUserMeFollow.removeWhere((element) => element.id == followedId);
+      Get.snackbar("Thông báo", "Huỷ theo dõi thành công");
+      update();
+    } else {
+      Get.snackbar("Thông báo", "Huỷ theo dõi thất bại");
+    }
+  }
+
+  updateBio() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userID = prefs.getInt('user_id') ?? 0;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}changebio.php"), body: {
+      'user_id': userID.toString(),
+      'bio': bioController.text,
+    });
+    var result = json.decode(response.body);
+    if (result['success']) {
+      userProfile.description = result['newBIO'];
+      Get.snackbar("Thông báo", "Update bio successfuly");
+      update();
+    } else {
+      Get.snackbar("Thông báo", "Update bio failed");
+    }
+  }
+
+  changeAvatar() async {
+    try {
+      final imagePick =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (imagePick == null) {
+        return;
+      } else {
+        avatar.value = File("");
+        final imageTemp = File(imagePick.path);
+        avatar.value = imageTemp;
+        if (avatar.value.path != "") {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          int userID = prefs.getInt('user_id') ?? 0;
+          var response = await http.post(
+              Uri.parse("${BaseUrl.getBaseUrl()}changeavatar.php"),
+              body: {
+                'user_id': userID.toString(),
+                'avatar': avatar.value.path,
+              });
+          var result = json.decode(response.body);
+          if (result['success']) {
+            //userProfile.avatar = avatar.value.path;
+            onInit();
+            Get.snackbar("Thông báo", "Update avatar successfuly");
+            update();
+          } else {
+            Get.snackbar("Thông báo", "Update avatar failed");
+          }
+        }
+
+        update();
+      }
+    } on PlatformException catch (e) {
+      return e;
+    }
   }
 
   changeSelectTab(int id) {

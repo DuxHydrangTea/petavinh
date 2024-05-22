@@ -74,7 +74,7 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text(
-              'Tìm kiếm',
+              'Search',
               style: TextStyle(
                 color: MyColor.mainColor,
                 fontWeight: MyFontWeight.semiBold,
@@ -84,7 +84,7 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text(
-              'Nhóm',
+              'Group',
               style: TextStyle(
                 color: MyColor.mainColor,
                 fontWeight: MyFontWeight.semiBold,
@@ -94,7 +94,7 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text(
-              'Trang cá nhân',
+              'Profile',
               style: TextStyle(
                 color: MyColor.mainColor,
                 fontWeight: MyFontWeight.semiBold,
@@ -106,7 +106,7 @@ class MyDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text(
-              'Đăng xuất',
+              'Log out',
               style: TextStyle(
                 color: MyColor.mainColor,
                 fontWeight: MyFontWeight.semiBold,

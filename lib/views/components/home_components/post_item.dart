@@ -27,7 +27,7 @@ class PostItem extends StatelessWidget {
   int countSave;
   VoidCallback onPressLike;
   VoidCallback onPressSave;
-
+  VoidCallback? onFollow;
   PostItem({
     super.key,
     this.isFollowed = false,
@@ -39,6 +39,7 @@ class PostItem extends StatelessWidget {
     required this.countSave,
     required this.onPressLike,
     required this.onPressSave,
+    this.onFollow,
   });
 
   @override
@@ -47,7 +48,6 @@ class PostItem extends StatelessWidget {
       onTap: () {
         Get.to(ScreenPost(
           post: post,
-          listComment: [...listComment],
         ));
       },
       child: Container(
@@ -77,8 +77,8 @@ class PostItem extends StatelessWidget {
                           style: const TextStyle(fontWeight: MyFontWeight.bold),
                         ),
                         const Gap(5),
-                        InkWell(
-                            onTap: null,
+                        GestureDetector(
+                            onTap: onFollow,
                             child: Text(
                               isFollowed == false ? ".Follow" : ".Followed",
                               style: TextStyle(

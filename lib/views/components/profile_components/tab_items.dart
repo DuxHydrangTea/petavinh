@@ -29,7 +29,7 @@ class TabItem extends StatelessWidget {
           label,
           style: TextStyle(
             color: isSelect == true ? Colors.white : const Color(0xff3f3f3f),
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: MyFontWeight.semiBold,
           ),
           textAlign: TextAlign.center,

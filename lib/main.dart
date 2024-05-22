@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: "Poppins",
       ),
-      initialRoute: MyRoute.getIntroHome(),
+      initialRoute: MyRoute.getAdminUser(),
       getPages: MyRoute.routes,
     );
   }

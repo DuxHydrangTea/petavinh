@@ -15,7 +15,6 @@ class RatestPostCard extends StatelessWidget {
     for (var element in list) {
       listCardPost.add(CardPost(
         post: element,
-        listCmt: [...listcmt.where((e) => e.postId == element.id)],
       ));
     }
     return Padding(

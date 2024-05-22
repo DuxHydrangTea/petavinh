@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class HomeController extends GetxController {
   int selectedLocal = 1;
 
   // Danh sách chủ đề
-  List<Topic> listTopic = [];
+  List<Topic> listTopic = <Topic>[];
 
   // Danh sách bài viết tốt nhất
   List<Post> listRatestPost = <Post>[];
@@ -69,6 +68,7 @@ class HomeController extends GetxController {
   // Danh sách tổng hợp các Save
   List<Save> listSave = <Save>[];
   User userProfile = User();
+  List<Post> listPostHome = <Post>[];
 //
 //
 //
@@ -83,26 +83,43 @@ class HomeController extends GetxController {
 //
 //
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  List<int> listUserMeFollow = <int>[];
+  //
+  //
+  //
+  //
   @override
   void onInit() {
     super.onInit();
     // check Đăng nhập
     isLogin();
-
+    listPostHome = <Post>[];
+    listTopic = <Topic>[];
+    listRatestPost = <Post>[];
+    listComment = <Comment>[];
+    listAllPost = <Post>[];
+    listPostExplore = <Post>[];
+    listPostFollow = <Post>[];
+    listByLocal = <Post>[];
+    listLiked = <int>[];
+    listReact = <React>[];
+    listSavedByUserID = <int>[];
+    listSave = <Save>[];
+    userProfile = User();
+    listUserMeFollow = <int>[];
     // Duyệt chủ đề
     fetchListTopic();
     // Duyệt danh sách tổng hợp bình luận
+
     fetchComment();
     // Duỵet danh sách bài viết tốt nhất
     fecthListRatestPost();
 //
     // Duyệt tất cả bài viết
-    fecthListAllPost();
     // Duyệt tất cả bài viết nhóm
-    fetchPostGroup();
+
     // Duyệt tất cả bài viết từ người mình follow
-    fetchPostByFollow();
-//
+
     // Duyệt danh sách tổng hợp id bài viết mà người dùng đã like
     fetchListLiked();
     //fetchPostLocal();
@@ -114,13 +131,14 @@ class HomeController extends GetxController {
     fetchListSave();
     fectListSavedByUser();
     fetchUserProfile();
+    fetchListUserMeFollow();
+    fetchPostHome();
     titleController = TextEditingController();
     contentController = TextEditingController();
   }
 
   @override
   void onClose() {
-    // TODO: implement onClose
     super.onClose();
     titleController.dispose();
     contentController.dispose();
@@ -150,28 +168,77 @@ class HomeController extends GetxController {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt("user_id", 0);
     await prefs.setString("username", "");
-    //developer.log("${prefs.getInt('user_id')}");
     Get.to(() => ScreenLogin());
     update();
   }
 
   updateSelectCategory(int? index) {
     selectedCategory = index ?? 0;
+    fecthListRatestPost();
     update();
   }
 
   updateSelectLocal(int? index) {
     selectedLocal = index ?? 0;
+    fetchPostHome();
     update();
   }
 
-  fetchPostGroup() async {
-    listPostExplore = <Post>[];
+  getPostGroup() async {
+    List<Post> lp = <Post>[];
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int userId = prefs.getInt('user_id') ?? 0;
 
     var response = await http.post(
         Uri.parse("${BaseUrl.getBaseUrl()}getLocalPostInGroup.php"),
+        body: {'user_id': '$userId'});
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      listPostExplore = <Post>[];
+      result['allpost'].forEach((v) {
+        int id = int.parse(v['id']);
+        String title = v['title'];
+        String content = v['content'];
+        int userId = int.parse(v['user_id']);
+        String fullname = v['fullname'];
+        String avatar = v['avatar'];
+        int topicId = int.parse(v['topic_id']);
+        String topicname = v['topicname'];
+        int groupId = int.parse(v['group_id']);
+        String groupName = v['groupname'] ?? "";
+        String groupImage = v['groupimage'] ?? "";
+
+        String image = v['image'];
+        String postedDate = v['posted_date'];
+        int approve = int.parse(v['approve']);
+        lp.add(Post(
+          id: id,
+          title: title,
+          content: content,
+          userId: userId,
+          fullname: fullname,
+          avatar: avatar,
+          topicId: topicId,
+          topicname: topicname,
+          groupId: groupId,
+          groupName: groupName,
+          groupImage: groupImage,
+          image: image,
+          postedDate: postedDate,
+          approve: approve,
+        ));
+      });
+    }
+    return lp;
+  }
+
+  getPostByFollow() async {
+    List<Post> lp = <Post>[];
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userId = prefs.getInt('user_id') ?? 0;
+
+    var response = await http.post(
+        Uri.parse("${BaseUrl.getBaseUrl()}getPostByMyFollowing.php"),
         body: {'user_id': '$userId'});
     var result = await json.decode(response.body);
     if (result['success']) {
@@ -191,61 +258,7 @@ class HomeController extends GetxController {
         String image = v['image'];
         String postedDate = v['posted_date'];
         int approve = int.parse(v['approve']);
-        int numLike = int.parse(v['NUMLIKE']);
-        int numCmt = int.parse(v['NUMCMT']);
-        int numSave = int.parse(v['NUMSAVE']);
-        listPostExplore.add(Post(
-            id: id,
-            title: title,
-            content: content,
-            userId: userId,
-            fullname: fullname,
-            avatar: avatar,
-            topicId: topicId,
-            topicname: topicname,
-            groupId: groupId,
-            groupName: groupName,
-            groupImage: groupImage,
-            image: image,
-            postedDate: postedDate,
-            approve: approve,
-            numLike: numLike,
-            numCmt: numCmt,
-            numSave: numSave));
-      });
-    }
-    developer.log("${listPostExplore.length}");
-    update();
-  }
-
-  fetchPostByFollow() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    int userId = prefs.getInt('user_id') ?? 0;
-
-    var response = await http.post(
-        Uri.parse("${BaseUrl.getBaseUrl()}getPostByMyFollowing.php"),
-        body: {'user_id': '$userId'});
-    var result = await json.decode(response.body);
-    result['allpost'].forEach((v) {
-      int id = int.parse(v['id']);
-      String title = v['title'];
-      String content = v['content'];
-      int userId = int.parse(v['user_id']);
-      String fullname = v['fullname'];
-      String avatar = v['avatar'];
-      int topicId = int.parse(v['topic_id']);
-      String topicname = v['topicname'];
-      int groupId = int.parse(v['group_id']);
-      String groupName = v['groupname'] ?? "";
-      String groupImage = v['groupimage'] ?? "";
-
-      String image = v['image'];
-      String postedDate = v['posted_date'];
-      int approve = int.parse(v['approve']);
-      int numLike = int.parse(v['NUMLIKE']);
-      int numCmt = int.parse(v['NUMCMT']);
-      int numSave = int.parse(v['NUMSAVE']);
-      listPostFollow.add(Post(
+        lp.add(Post(
           id: id,
           title: title,
           content: content,
@@ -260,12 +273,10 @@ class HomeController extends GetxController {
           image: image,
           postedDate: postedDate,
           approve: approve,
-          numLike: numLike,
-          numCmt: numCmt,
-          numSave: numSave));
-    });
-    developer.log("${listPostExplore.length}");
-    update();
+        ));
+      });
+    }
+    return lp;
   }
 
   fetchListTopic() async {
@@ -286,6 +297,7 @@ class HomeController extends GetxController {
   }
 
   fecthListRatestPost() async {
+    List<Post> lp = <Post>[];
     var response =
         await http.post(Uri.parse("${BaseUrl.getBaseUrl()}getPosts.php"));
     var result = await json.decode(response.body);
@@ -305,33 +317,39 @@ class HomeController extends GetxController {
       String image = v['image'];
       String postedDate = v['posted_date'];
       int approve = int.parse(v['approve']);
-      int numLike = int.parse(v['NUMLIKE']);
-      int numCmt = int.parse(v['NUMCMT']);
-      int numSave = int.parse(v['NUMSAVE']);
-      listRatestPost.add(Post(
-          id: id,
-          title: title,
-          content: content,
-          userId: userId,
-          fullname: fullname,
-          avatar: avatar,
-          topicId: topicId,
-          topicname: topicname,
-          groupId: groupId,
-          groupName: groupName,
-          groupImage: groupImage,
-          image: image,
-          postedDate: postedDate,
-          approve: approve,
-          numLike: numLike,
-          numCmt: numCmt,
-          numSave: numSave));
+      lp.add(Post(
+        id: id,
+        title: title,
+        content: content,
+        userId: userId,
+        fullname: fullname,
+        avatar: avatar,
+        topicId: topicId,
+        topicname: topicname,
+        groupId: groupId,
+        groupName: groupName,
+        groupImage: groupImage,
+        image: image,
+        postedDate: postedDate,
+        approve: approve,
+      ));
     });
+    if (selectedCategory == -1) {
+      listRatestPost = <Post>[];
+      listRatestPost = [...lp];
+      update();
+    } else {
+      listRatestPost = <Post>[];
+      listRatestPost = [
+        ...lp.where((element) => element.topicId == selectedCategory)
+      ];
+      update();
+    }
     update();
   }
 
-  fecthListAllPost() async {
-    listPostExplore = <Post>[];
+  getListAllPost() async {
+    List<Post> lp = <Post>[];
     var response =
         await http.post(Uri.parse("${BaseUrl.getBaseUrl()}getAllPost.php"));
     var result = await json.decode(response.body);
@@ -351,35 +369,32 @@ class HomeController extends GetxController {
       String image = v['image'];
       String postedDate = v['posted_date'];
       int approve = int.parse(v['approve']);
-      int numLike = int.parse(v['NUMLIKE']);
-      int numCmt = int.parse(v['NUMCMT']);
-      int numSave = int.parse(v['NUMSAVE']);
-      listAllPost.add(Post(
-          id: id,
-          title: title,
-          content: content,
-          userId: userId,
-          fullname: fullname,
-          avatar: avatar,
-          topicId: topicId,
-          topicname: topicname,
-          groupId: groupId,
-          groupName: groupName,
-          groupImage: groupImage,
-          image: image,
-          postedDate: postedDate,
-          approve: approve,
-          numLike: numLike,
-          numCmt: numCmt,
-          numSave: numSave));
+
+      lp.add(Post(
+        id: id,
+        title: title,
+        content: content,
+        userId: userId,
+        fullname: fullname,
+        avatar: avatar,
+        topicId: topicId,
+        topicname: topicname,
+        groupId: groupId,
+        groupName: groupName,
+        groupImage: groupImage,
+        image: image,
+        postedDate: postedDate,
+        approve: approve,
+      ));
     });
-    update();
+    return lp;
   }
 
   fetchComment() async {
     var response =
         await http.post(Uri.parse("${BaseUrl.getBaseUrl()}getComment.php"));
     var result = await json.decode(response.body);
+    listComment = <Comment>[];
     result['binhluan_list'].forEach((v) {
       listComment.add(Comment(
         id: int.parse(v['id']),
@@ -405,6 +420,7 @@ class HomeController extends GetxController {
           body: {'user_id': '$id'});
       var result = await json.decode(response.body);
       if (result['success']) {
+        listLiked = <int>[];
         result['result'].forEach((item) {
           listLiked.add(int.parse(item['post_id']));
         });
@@ -418,6 +434,7 @@ class HomeController extends GetxController {
     var response =
         await http.post(Uri.parse("${BaseUrl.getBaseUrl()}getallreact.php"));
     var result = await json.decode(response.body);
+    listReact = <React>[];
     result['react_list'].forEach((v) {
       int id = int.parse(v['id']);
       int postId = int.parse(v['post_id']);
@@ -429,36 +446,37 @@ class HomeController extends GetxController {
     update();
   }
 
-  getCountReact(int postId) {
+  int getCountReact(int postId) {
     int count = listReact.where((element) => element.postId == postId).length;
-    update();
     return count;
   }
 
   updateCountReact() {}
 
-  getPostLocal() {
+  fetchPostHome() async {
     List<Post> list = <Post>[];
     // All
     if (selectedLocal == 1) {
       list = <Post>[];
-      list = [...listAllPost];
+      list = await getListAllPost();
       update();
     }
     // Group
     else if (selectedLocal == 2) {
       list = <Post>[];
-      list = [...listPostExplore];
+      list = await getPostGroup();
       update();
     }
     // Followed
     else {
       list = <Post>[];
-      list = [...listPostFollow];
+      list = await getPostByFollow();
+      //list = [...listPostFollow];
       update();
     }
+
+    listPostHome = [...list];
     update();
-    return list;
   }
 
   getListCommentByID(int postId) {
@@ -557,7 +575,6 @@ class HomeController extends GetxController {
 
   getCountSave(int postId) {
     int count = listSave.where((element) => element.postId == postId).length;
-    update();
     return count;
   }
 
@@ -629,6 +646,23 @@ class HomeController extends GetxController {
     update();
   }
 
+  fetchListUserMeFollow() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userID = prefs.getInt('user_id') ?? 0;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}getusermefollow.php"), body: {
+      'user_id': userID.toString(),
+    });
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      result['follower'].forEach((e) {
+        listUserMeFollow.add(int.parse(e['followed_id']));
+      });
+    }
+
+    update();
+  }
+
 //
 //
 //
@@ -677,6 +711,27 @@ class HomeController extends GetxController {
       Get.offAllNamed("/");
     } else {
       Get.snackbar("Thông báo", "Đăng bài thất bại !");
+    }
+  }
+
+  unfollow(int followedId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int followingId = prefs.getInt('user_id') ?? 0;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}unfollow.php"), body: {
+      'followed_id': followedId.toString(),
+      'following_id': followingId.toString(),
+    });
+    var result = json.decode(response.body);
+    if (result['success'] && result['action'] == "unfollow") {
+      //fetchListUserMeFollow();
+      listUserMeFollow.removeWhere((element) => element == followedId);
+      Get.snackbar("Thông báo", result['message']);
+      update();
+    } else {
+      listUserMeFollow.add(followedId);
+      Get.snackbar("Thông báo", result['message']);
+      update();
     }
   }
 }

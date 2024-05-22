@@ -44,7 +44,6 @@ class PostGroupItem extends StatelessWidget {
       onTap: () {
         Get.to(ScreenPost(
           post: post,
-          listComment: [...listComment],
         ));
       },
       child: Container(

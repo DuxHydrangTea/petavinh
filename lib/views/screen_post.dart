@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myfontweight.dart';
 import 'package:petavinh/controllers/postcontroller.dart';
-import 'package:petavinh/models/comment.dart';
 import 'package:petavinh/models/post.dart';
 import 'package:petavinh/utils/mytime.dart';
 import 'package:petavinh/views/components/container_border.dart';
@@ -17,11 +16,11 @@ import 'package:petavinh/views/components/my_hero.dart';
 // ignore: must_be_immutable
 class ScreenPost extends StatelessWidget {
   Post post;
-  List<Comment> listComment;
+  //List<Comment> listComment;
   ScreenPost({
     super.key,
     required this.post,
-    required this.listComment,
+    //required this.listComment,
   });
 
   @override

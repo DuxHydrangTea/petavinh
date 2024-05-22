@@ -32,8 +32,8 @@ class Post {
     required this.image,
     required this.postedDate,
     required this.approve,
-    required this.numLike,
-    required this.numCmt,
-    required this.numSave,
+    this.numLike = 0,
+    this.numCmt = 0,
+    this.numSave = 0,
   });
 }
