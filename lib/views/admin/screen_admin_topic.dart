@@ -1,22 +1,19 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:petavinh/config/mycolor.dart';
 import 'package:petavinh/config/myfontweight.dart';
-import 'package:petavinh/controllers/admin/useradmincontroller.dart';
+import 'package:petavinh/controllers/admin/topicadmincontroller.dart';
 import 'package:petavinh/views/admin/components/admin_drawer.dart';
 
-class ScreenAdminUser extends StatelessWidget {
-  const ScreenAdminUser({super.key});
+class ScreenAdminTopic extends StatelessWidget {
+  const ScreenAdminTopic({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(UserAdminController());
-    return GetBuilder<UserAdminController>(builder: (controller) {
+    Get.put(TopicAdminController());
+    return GetBuilder<TopicAdminController>(builder: (controller) {
       return Scaffold(
         key: controller.scaffoldKey,
         endDrawer: const Drawer(
@@ -86,157 +83,166 @@ class ScreenAdminUser extends StatelessWidget {
                             ],
                           ),
                           const Gap(10),
-                          GestureDetector(
+                          InkWell(
                             onTap: () => showModalBottomSheet(
-                              useSafeArea: true,
-                              isScrollControlled: true,
                               context: context,
                               builder: (context) => Container(
-                                color: Colors.white,
-                                padding: const EdgeInsets.all(30),
-                                child: Scaffold(
-                                  appBar: AppBar(),
-                                  body: SingleChildScrollView(
-                                    child: Container(
-                                      child: Column(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         children: [
-                                          Obx(() =>
-                                              controller.image.value.path == ""
-                                                  ? Container()
-                                                  : Image.file(File(controller
-                                                      .image.value.path))),
-                                          const Gap(10),
                                           GestureDetector(
                                             onTap: () {
-                                              controller.imagePicker(
-                                                  ImageSource.gallery);
+                                              Get.back();
                                             },
-                                            child: const Row(
-                                              children: [
-                                                FaIcon(FontAwesomeIcons.image),
-                                                Gap(5),
-                                                Text("Choose image"),
-                                              ],
-                                            ),
+                                            child: const FaIcon(
+                                                FontAwesomeIcons.arrowLeft),
                                           ),
-                                          TextFormField(
-                                            controller:
-                                                controller.txtAddUsername,
-                                            decoration: const InputDecoration(
-                                                label: Text("Username")),
-                                          ),
-                                          TextFormField(
-                                            controller:
-                                                controller.txtAddFullname,
-                                            decoration: const InputDecoration(
-                                                label: Text("Fullname")),
-                                          ),
-                                          TextFormField(
-                                            controller:
-                                                controller.txtAddPassword,
-                                            decoration: const InputDecoration(
-                                                label: Text("Password")),
-                                          ),
-                                          TextFormField(
-                                            controller: controller.txtAddBio,
-                                            keyboardType:
-                                                TextInputType.multiline,
-                                            maxLines: 10,
-                                            decoration: const InputDecoration(
-                                                label: Text("Bio")),
-                                          ),
-                                          const Gap(10),
+                                          const Spacer(),
                                           GestureDetector(
                                             onTap: () {
-                                              controller.addUser();
+                                              controller.addTopic();
                                               Get.back();
                                             },
                                             child: Container(
-                                              width: 80,
                                               padding: const EdgeInsets.all(10),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.green,
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: const Center(
-                                                  child: Text(
-                                                "Add",
+                                              decoration: const BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5)),
+                                              ),
+                                              child: const Text(
+                                                "Confirm",
                                                 style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )),
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           )
                                         ],
                                       ),
-                                    ),
+                                      const Text(
+                                        "Add a new topic",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.purple,
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: controller.txtAddTopicName,
+                                        decoration: const InputDecoration(
+                                          label: Text("Topic name..."),
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: controller.txtAddDes,
+                                        decoration: const InputDecoration(
+                                          label: Text("Description..."),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                             child: Container(
+                              margin: const EdgeInsets.only(bottom: 10),
                               padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: MyColor.bookMarkColor,
-                                borderRadius: BorderRadius.circular(5),
+                              decoration: const BoxDecoration(
+                                color: Colors.green,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
                               ),
                               child: const Text(
-                                "Add user",
+                                "Add topic",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: MyFontWeight.bold,
                                 ),
                               ),
                             ),
                           ),
-                          const Gap(10),
                           //// listttttt user ////
                           SizedBox(
                             height: 700,
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount: controller.listUser.length,
+                              itemCount: controller.listTopic.length,
                               itemBuilder: (context, index) {
+                                controller.txtEditTopicName =
+                                    TextEditingController(
+                                        text: controller
+                                            .listTopic[index].topicname!);
+                                controller.txtEditTopicDes.text =
+                                    controller.listTopic[index].description!;
+                                controller.txtEditTopicId.text =
+                                    controller.listTopic[index].id!.toString();
                                 return GestureDetector(
                                   onTap: () => showModalBottomSheet(
                                     context: context,
                                     builder: (context) {
                                       return Container(
-                                        padding: const EdgeInsets.all(20),
-                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(30),
                                         child: Column(
                                           children: [
-                                            CircleAvatar(
-                                              radius: 70,
-                                              backgroundImage: FileImage(
-                                                File(controller
-                                                    .listUser[index].avatar),
+                                            Row(children: [
+                                              const Text(
+                                                "Edit topic",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              const Spacer(),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  controller.editTopic();
+                                                  Get.back();
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(10),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                          color: Colors.green,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          5))),
+                                                  child: const Text(
+                                                    "Save",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              )
+                                            ]),
+                                            TextFormField(
+                                              controller:
+                                                  controller.txtEditTopicName,
+                                              decoration: const InputDecoration(
+                                                label: Text("Topic name"),
                                               ),
                                             ),
-                                            const Gap(20),
-                                            Text(
-                                              controller
-                                                  .listUser[index].fullname,
-                                              style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight:
-                                                      MyFontWeight.semiBold),
+                                            Visibility(
+                                              visible: false,
+                                              child: TextFormField(
+                                                controller:
+                                                    controller.txtEditTopicId,
+                                              ),
                                             ),
-                                            Text(
-                                              "Joined time: ${controller.listUser[index].joinedTime}",
-                                              style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight:
-                                                      MyFontWeight.medium),
-                                            ),
-                                            const Gap(20),
-                                            Text(
-                                              "Bio: ${controller.listUser[index].description}",
-                                              style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight:
-                                                      MyFontWeight.normal),
+                                            TextFormField(
+                                              controller:
+                                                  controller.txtEditTopicDes,
+                                              decoration: const InputDecoration(
+                                                label:
+                                                    Text("Topic description"),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -256,14 +262,9 @@ class ScreenAdminUser extends StatelessWidget {
                                     ),
                                     child: Row(
                                       children: [
-                                        Text((controller.listUser[index].id)
+                                        Text((controller.listTopic[index].id)
                                             .toString()),
                                         const Gap(10),
-                                        CircleAvatar(
-                                          backgroundImage: FileImage(File(
-                                              controller
-                                                  .listUser[index].avatar)),
-                                        ),
                                         const Gap(10),
                                         Column(
                                           crossAxisAlignment:
@@ -271,27 +272,21 @@ class ScreenAdminUser extends StatelessWidget {
                                           children: [
                                             Row(
                                               children: [
-                                                controller.listUser[index]
-                                                            .isAdmin ==
-                                                        1
-                                                    ? const FaIcon(
-                                                        FontAwesomeIcons
-                                                            .solidUser,
-                                                        size: 12,
-                                                      )
-                                                    : Container(),
-                                                const Gap(10),
                                                 Text(
-                                                  controller
-                                                      .listUser[index].fullname,
+                                                  controller.listTopic[index]
+                                                      .topicname!,
                                                   style: const TextStyle(
-                                                      fontWeight: MyFontWeight
-                                                          .semiBold),
+                                                      color: Colors.purple,
+                                                      fontWeight:
+                                                          MyFontWeight.bold),
                                                 ),
                                               ],
                                             ),
                                             Text(
-                                                "@${controller.listUser[index].username}"),
+                                              "${controller.listTopic[index].description}",
+                                              style: const TextStyle(
+                                                  fontStyle: FontStyle.italic),
+                                            ),
                                           ],
                                         ),
                                         const Spacer(),
@@ -316,9 +311,10 @@ class ScreenAdminUser extends StatelessWidget {
                                                     const EdgeInsets.all(20),
                                                 backgroundColor: Colors.white,
                                                 onConfirm: () {
-                                                  controller.onDeleteUser(
+                                                  controller.deleteTopic(
                                                       controller
-                                                          .listUser[index].id);
+                                                          .listTopic[index]
+                                                          .id!);
                                                   Get.back();
                                                 });
                                           },

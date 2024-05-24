@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key});
+class ScreenAdminClient extends StatelessWidget {
+  const ScreenAdminClient({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class MyWidget extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                Get.toNamed("/admin/");
+                Get.toNamed("/admin/user/");
               },
               child: const Text("To Administrator"),
             ),

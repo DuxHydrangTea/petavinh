@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:petavinh/views/admin/screen_admin_post.dart';
+import 'package:petavinh/views/admin/screen_admin_topic.dart';
 import 'package:petavinh/views/admin/screen_admin_user.dart';
+import 'package:petavinh/views/admin/select_client.dart';
 import 'package:petavinh/views/screen_home.dart';
 import 'package:petavinh/views/screen_introhome.dart';
 import 'package:petavinh/views/screen_login.dart';
@@ -15,8 +17,10 @@ class MyRoute {
       __signup = "/signup",
       __detail = "/detail",
       __profile = "/profile",
+      __admin_client = "/admin/",
       __admin_user = "/admin/user/",
-      __admin_post = "/admin/post/";
+      __admin_post = "/admin/post/",
+      __admin_topic = "/admin/topic/";
   static String getIntroHome() => __introhome;
   static String getHome() => __home;
   static String getLogin() => __login;
@@ -25,6 +29,8 @@ class MyRoute {
   static String getProfile() => __profile;
   static String getAdminUser() => __admin_user;
   static String getAdminPost() => MyRoute.__admin_post;
+  static String getAdminClient() => __admin_client;
+  static String getAdminTopic() => __admin_topic;
   static List<GetPage> routes = [
     GetPage(
       name: __introhome,
@@ -65,6 +71,18 @@ class MyRoute {
     GetPage(
       name: __admin_post,
       page: () => const ScreenAdminPost(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(seconds: 1),
+    ),
+    GetPage(
+      name: __admin_client,
+      page: () => const ScreenAdminClient(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(seconds: 1),
+    ),
+    GetPage(
+      name: __admin_topic,
+      page: () => const ScreenAdminTopic(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(seconds: 1),
     )
