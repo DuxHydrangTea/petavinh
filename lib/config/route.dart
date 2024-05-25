@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:petavinh/views/admin/screen_admin_group.dart';
 import 'package:petavinh/views/admin/screen_admin_post.dart';
 import 'package:petavinh/views/admin/screen_admin_topic.dart';
 import 'package:petavinh/views/admin/screen_admin_user.dart';
@@ -20,7 +21,9 @@ class MyRoute {
       __admin_client = "/admin/",
       __admin_user = "/admin/user/",
       __admin_post = "/admin/post/",
-      __admin_topic = "/admin/topic/";
+      __admin_topic = "/admin/topic/",
+      __admin_group = "/admin/group/";
+
   static String getIntroHome() => __introhome;
   static String getHome() => __home;
   static String getLogin() => __login;
@@ -31,6 +34,7 @@ class MyRoute {
   static String getAdminPost() => MyRoute.__admin_post;
   static String getAdminClient() => __admin_client;
   static String getAdminTopic() => __admin_topic;
+  static String getAdminGroup() => __admin_group;
   static List<GetPage> routes = [
     GetPage(
       name: __introhome,
@@ -83,6 +87,12 @@ class MyRoute {
     GetPage(
       name: __admin_topic,
       page: () => const ScreenAdminTopic(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(seconds: 1),
+    ),
+    GetPage(
+      name: __admin_group,
+      page: () => const ScreenAdminGroup(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(seconds: 1),
     )

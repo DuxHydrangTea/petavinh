@@ -92,7 +92,9 @@ class AdminDrawer extends StatelessWidget {
                 fontWeight: MyFontWeight.semiBold,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Get.offAllNamed("/admin/group/");
+            },
           )
         ],
       ),

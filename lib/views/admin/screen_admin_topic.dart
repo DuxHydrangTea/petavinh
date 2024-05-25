@@ -73,7 +73,7 @@ class ScreenAdminTopic extends StatelessWidget {
                           const Row(
                             children: [
                               Text(
-                                "User table",
+                                "Topic table",
                                 style: TextStyle(
                                   fontWeight: MyFontWeight.bold,
                                 ),
