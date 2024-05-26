@@ -4,8 +4,8 @@ class Topic {
   String? description;
   static List<Topic>? listAllTopic;
   Topic({
-    this.id,
-    this.topicname,
-    this.description,
+    this.id = 0,
+    this.topicname = "",
+    this.description = "",
   });
 }

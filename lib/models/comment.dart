@@ -7,7 +7,7 @@ class Comment {
     required this.userId,
     required this.commentText,
     required this.commentedTime,
-    required this.fullname,
-    required this.avatar,
+    this.fullname = "",
+    this.avatar = "",
   });
 }

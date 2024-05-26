@@ -119,4 +119,19 @@ class GroupAdminController extends GetxController {
     }
     return false;
   }
+
+  deleteGroup(int groupId) async {
+    var response = await http.post(
+        Uri.parse("${BaseUrl.getBaseUrl()}/admin/deletegroup.php"),
+        body: {
+          'group_id': groupId.toString(),
+        });
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      fetchListGroup();
+      Get.snackbar("Thông báo", result['message']);
+    } else {
+      Get.snackbar("Thông báo", result['message']);
+    }
+  }
 }

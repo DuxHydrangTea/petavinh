@@ -220,7 +220,7 @@ class PostItem extends StatelessWidget {
                       color: Colors.black,
                     ),
                     label: Text(
-                      countReact.toString(),
+                      "$countReact reacts",
                       style: const TextStyle(
                         color: Colors.black,
                       ),
@@ -247,9 +247,11 @@ class PostItem extends StatelessWidget {
                                       child: const FaIcon(
                                           FontAwesomeIcons.arrowLeft),
                                     ),
-                                    ListComments(
-                                      listComment: listComment,
-                                    ),
+                                    listComment.isEmpty
+                                        ? Container()
+                                        : ListComments(
+                                            listComment: listComment,
+                                          ),
                                   ],
                                 ),
                               )),
@@ -263,7 +265,7 @@ class PostItem extends StatelessWidget {
                       color: Colors.black,
                     ),
                     label: Text(
-                      listComment.length.toString(),
+                      "${listComment.length} comments",
                       style: const TextStyle(
                         color: Colors.black,
                       ),
@@ -279,7 +281,7 @@ class PostItem extends StatelessWidget {
                       color: Colors.black,
                     ),
                     label: Text(
-                      countSave.toString(),
+                      "$countSave saves",
                       style: const TextStyle(
                         color: Colors.black,
                       ),

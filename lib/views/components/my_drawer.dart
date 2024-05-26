@@ -90,7 +90,9 @@ class MyDrawer extends StatelessWidget {
                 fontWeight: MyFontWeight.semiBold,
               ),
             ),
-            onTap: null,
+            onTap: () {
+              Get.toNamed("/group");
+            },
           ),
           ListTile(
             title: Text(

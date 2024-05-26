@@ -53,6 +53,7 @@ dev_dependencies:
   readmore: ^3.0.0
   image_picker: ^1.1.1
   liquid_pull_to_refresh: ^3.0.1
+  flutter_inner_shadow: ^0.0.1
 flutter:
   uses-material-design: true
   assets:

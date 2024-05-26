@@ -25,7 +25,7 @@ class ScreenPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(PostController());
+    Get.put(PostController(post: post));
     return GetBuilder<PostController>(builder: (controller) {
       return Scaffold(
         body: SafeArea(
@@ -53,7 +53,9 @@ class ScreenPost extends StatelessWidget {
                     children: [
                       ContainerBorder(
                         child: CircleAvatar(
-                          backgroundImage: Image.file(File(post.avatar)).image,
+                          backgroundImage:
+                              Image.file(File(controller.userPosted.avatar))
+                                  .image,
                         ),
                       ),
                       const Gap(8),
@@ -63,7 +65,7 @@ class ScreenPost extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                post.fullname,
+                                controller.userPosted.fullname,
                                 style: const TextStyle(
                                     fontWeight: MyFontWeight.bold),
                               ),
@@ -71,7 +73,7 @@ class ScreenPost extends StatelessWidget {
                               InkWell(
                                   onTap: null,
                                   child: Text(
-                                    ".Followed",
+                                    "",
                                     style: TextStyle(
                                         color: MyColor.heartColor,
                                         fontWeight: MyFontWeight.bold),
@@ -152,7 +154,7 @@ class ScreenPost extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                           ))),
                       child: Text(
-                        post.topicname,
+                        controller.getTopicByID(post.topicId).topicname ?? "",
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: MyFontWeight.semiBold,
@@ -186,61 +188,7 @@ class ScreenPost extends StatelessWidget {
                   // action
                   const Gap(15),
                   const Divider(),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     TextButton.icon(
-                  //         onPressed: null,
-                  //         style: TextButton.styleFrom(
-                  //             padding: const EdgeInsets.all(0)),
-                  //         icon: const FaIcon(
-                  //           FontAwesomeIcons.heart,
-                  //           color: Colors.black,
-                  //         ),
-                  //         label: Text(
-                  //           post.numLike.toString(),
-                  //           style: const TextStyle(
-                  //             color: Colors.black,
-                  //           ),
-                  //         )),
-                  //     TextButton.icon(
-                  //         onPressed: () => showModalBottomSheet(
-                  //               enableDrag: true,
-                  //               isScrollControlled: true,
-                  //               context: context,
-                  //               builder: (context) => ScreenSheetListComment(
-                  //                 listComment: const [],
-                  //               ),
-                  //             ),
-                  //         style: TextButton.styleFrom(
-                  //             padding: const EdgeInsets.all(0)),
-                  //         icon: const FaIcon(
-                  //           FontAwesomeIcons.comment,
-                  //           color: Colors.black,
-                  //         ),
-                  //         label: const Text(
-                  //           "0",
-                  //           style: TextStyle(
-                  //             color: Colors.black,
-                  //           ),
-                  //         )),
-                  //     TextButton.icon(
-                  //         onPressed: null,
-                  //         style: TextButton.styleFrom(
-                  //             padding: const EdgeInsets.all(0)),
-                  //         icon: const FaIcon(
-                  //           FontAwesomeIcons.bookmark,
-                  //           color: Colors.black,
-                  //         ),
-                  //         label: Text(
-                  //           post.numSave.toString(),
-                  //           style: const TextStyle(
-                  //             color: Colors.black,
-                  //           ),
-                  //         ))
-                  //   ],
-                  // ),
-                  // const Divider(),
+
                   const Gap(15),
 
                   // ===============================
@@ -251,7 +199,8 @@ class ScreenPost extends StatelessWidget {
                       ContainerBorder(
                         child: CircleAvatar(
                           radius: 25,
-                          backgroundImage: Image.file(File(post.avatar)).image,
+                          backgroundImage:
+                              Image.file(File(controller.myUser.avatar)).image,
                         ),
                       ),
                       const Gap(15),

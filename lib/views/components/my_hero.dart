@@ -19,15 +19,17 @@ class MyHeroAlbum extends StatelessWidget {
         tag: tag,
         child: Scaffold(
           body: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.file(File(tag)),
-                    Text(description),
-                  ]),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.file(File(tag)),
+                      Text(description),
+                    ]),
+              ),
             ),
           ),
         ),

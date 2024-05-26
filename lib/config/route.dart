@@ -4,6 +4,7 @@ import 'package:petavinh/views/admin/screen_admin_post.dart';
 import 'package:petavinh/views/admin/screen_admin_topic.dart';
 import 'package:petavinh/views/admin/screen_admin_user.dart';
 import 'package:petavinh/views/admin/select_client.dart';
+import 'package:petavinh/views/screen_group.dart';
 import 'package:petavinh/views/screen_home.dart';
 import 'package:petavinh/views/screen_introhome.dart';
 import 'package:petavinh/views/screen_login.dart';
@@ -18,6 +19,7 @@ class MyRoute {
       __signup = "/signup",
       __detail = "/detail",
       __profile = "/profile",
+      __group = "/group",
       __admin_client = "/admin/",
       __admin_user = "/admin/user/",
       __admin_post = "/admin/post/",
@@ -30,6 +32,7 @@ class MyRoute {
   static String getSignUp() => __signup;
   static String getDetail() => __detail;
   static String getProfile() => __profile;
+  static String getGroup() => __group;
   static String getAdminUser() => __admin_user;
   static String getAdminPost() => MyRoute.__admin_post;
   static String getAdminClient() => __admin_client;
@@ -63,6 +66,12 @@ class MyRoute {
     GetPage(
       name: __profile,
       page: () => const ScreenProfile(),
+      transition: Transition.cupertino,
+      transitionDuration: const Duration(seconds: 1),
+    ),
+    GetPage(
+      name: __group,
+      page: () => const ScreenGroup(),
       transition: Transition.cupertino,
       transitionDuration: const Duration(seconds: 1),
     ),

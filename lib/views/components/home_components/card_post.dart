@@ -77,29 +77,38 @@ class CardPost extends StatelessWidget {
                 ],
               ),
               const Gap(10),
-              Row(
-                children: [
-                  Text(
-                    post.topicname,
-                    style: TextStyle(fontSize: 11, color: MyColor.outlineColor),
-                  ),
-                  const Spacer(),
-                  Text(
-                    MyTime.diffTime(post.postedDate),
-                    style: TextStyle(
-                      color: MyColor.textHomeColor,
-                      fontSize: 11,
+              SizedBox(
+                // width: double.infinity,
+
+                child: Row(
+                  children: [
+                    Text(
+                      post.topicname,
+                      style:
+                          TextStyle(fontSize: 11, color: MyColor.outlineColor),
                     ),
-                  ),
-                ],
+                    const Spacer(),
+                    Text(
+                      MyTime.diffTime(post.postedDate),
+                      style: TextStyle(
+                        color: MyColor.textHomeColor,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    post.title,
-                    style: const TextStyle(fontWeight: MyFontWeight.semiBold),
+                  SizedBox(
+                    width: 250,
+                    child: Text(
+                      overflow: TextOverflow.ellipsis,
+                      post.title,
+                      style: const TextStyle(fontWeight: MyFontWeight.semiBold),
+                    ),
                   ),
                 ],
               ),

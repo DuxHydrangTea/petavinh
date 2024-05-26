@@ -290,6 +290,14 @@ class ScreenAdminPost extends StatelessWidget {
                                             Text(controller.getFullnameByID(
                                                 controller.listAllPost[index]
                                                     .userId)),
+                                            Text(
+                                              controller.labelCount(controller
+                                                  .listAllPost[index].id),
+                                              style: TextStyle(
+                                                color: MyColor.mainColor,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         const Spacer(),

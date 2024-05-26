@@ -38,4 +38,7 @@ class Sample {
     "assets/images/post9.jpg",
     "assets/images/post10.jpg",
   ];
+
+  static String fileImage =
+      "/data/user/0/com.example.petavinh/cache/511ce077-efd3-46c7-8606-46963fbd354f/FB_IMG_1714291713383.jpg";
 }

@@ -352,9 +352,41 @@ class ScreenAdminGroup extends StatelessWidget {
                                                   Get.back();
                                                 });
                                           },
-                                          child: FaIcon(
-                                            FontAwesomeIcons.squareXmark,
-                                            color: MyColor.heartColor,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Get.defaultDialog(
+                                                  title:
+                                                      "Do you want to delete this group",
+                                                  content: Container(),
+                                                  textConfirm: "Confirm",
+                                                  confirmTextColor:
+                                                      Colors.white,
+                                                  buttonColor:
+                                                      MyColor.heartColor,
+                                                  textCancel: "Cancel",
+                                                  cancelTextColor:
+                                                      MyColor.heartColor,
+                                                  titleStyle: TextStyle(
+                                                    fontSize: 17,
+                                                    color: MyColor.heartColor,
+                                                    fontWeight:
+                                                        MyFontWeight.bold,
+                                                  ),
+                                                  titlePadding:
+                                                      const EdgeInsets.all(20),
+                                                  backgroundColor: Colors.white,
+                                                  onConfirm: () {
+                                                    controller.deleteGroup(
+                                                        controller
+                                                            .listGroup[index]
+                                                            .id);
+                                                    Get.back();
+                                                  });
+                                            },
+                                            child: FaIcon(
+                                              FontAwesomeIcons.squareXmark,
+                                              color: MyColor.heartColor,
+                                            ),
                                           ),
                                         )
                                       ],

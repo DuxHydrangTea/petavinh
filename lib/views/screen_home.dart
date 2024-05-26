@@ -303,6 +303,7 @@ class ScreenHome extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: SizedBox(
                         height: 350,
+                        //width: double.infinity,
                         child: ListView.builder(
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,

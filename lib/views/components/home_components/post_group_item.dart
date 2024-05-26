@@ -191,7 +191,7 @@ class PostGroupItem extends StatelessWidget {
                       color: Colors.black,
                     ),
                     label: Text(
-                      countReact.toString(),
+                      "$countReact reacts",
                       style: const TextStyle(
                         color: Colors.black,
                       ),
@@ -234,7 +234,7 @@ class PostGroupItem extends StatelessWidget {
                       color: Colors.black,
                     ),
                     label: Text(
-                      listComment.length.toString(),
+                      "${listComment.length} comments",
                       style: const TextStyle(
                         color: Colors.black,
                       ),
@@ -250,7 +250,7 @@ class PostGroupItem extends StatelessWidget {
                       color: Colors.black,
                     ),
                     label: Text(
-                      countSave.toString(),
+                      "$countSave saves",
                       style: const TextStyle(
                         color: Colors.black,
                       ),
