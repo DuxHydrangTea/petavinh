@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:petavinh/config/base_url.dart';
 import 'package:petavinh/models/comment.dart';
 import 'package:petavinh/models/group.dart';
@@ -12,6 +15,7 @@ import 'package:petavinh/models/react.dart';
 import 'package:petavinh/models/save.dart';
 import 'package:petavinh/models/topic.dart';
 import 'package:petavinh/models/user.dart';
+import 'package:petavinh/views/screen_inside_group.dart';
 import 'package:petavinh/views/screen_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,10 +43,19 @@ class InsideGroupController extends GetxController {
   InsideGroupController({required this.groupId});
   // login
   late int idLogin;
+  //
+  var wIdTopic = 1.obs;
+  Rx<File> image = File("").obs;
+  late TextEditingController contentController;
+  late TextEditingController titleController;
+  //
+  late User myUser;
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    contentController = TextEditingController();
+    titleController = TextEditingController();
     group = Group(
         id: 0,
         groupName: "groupName",
@@ -64,14 +77,43 @@ class InsideGroupController extends GetxController {
     fetchListReact();
     fetchListSave();
     fetchComment();
+    updateUser();
     getIdLogin();
     fetchUserNotApprove();
+  }
+
+  updateUser() async {
+    int idLogin = 0;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    idLogin = prefs.getInt('user_id') ?? 0;
+    myUser = User();
+    var post = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}getUserByID.php"), body: {
+      'user_id': idLogin.toString(),
+    });
+    var res = await json.decode(post.body);
+    if (res['success']) {
+      var user = res['user'];
+      myUser = User(
+        id: int.parse(user['id']),
+        username: (user['username']),
+        password: user['password'],
+        fullname: user['fullname'],
+        avatar: user['avatar'],
+        joinedTime: user['joined_time'],
+        description: user['description'],
+        isAdmin: int.parse(user['isAdmin']),
+      );
+    }
+    update();
   }
 
   @override
   void onClose() {
     // TODO: implement onClose
     super.onClose();
+    contentController.dispose();
+    titleController.dispose();
   }
 
   getIdLogin() async {
@@ -423,24 +465,54 @@ class InsideGroupController extends GetxController {
     }
   }
 
-  acceptUser(int userId) async {
-    int groupId = group.id;
-    var response = await http
-        .post(Uri.parse("${BaseUrl.getBaseUrl()}acceptUser.php"), body: {
-      'user_id': '$userId',
-      'group_id': '$groupId',
-    });
-    var result = json.decode(response.body);
-    if (result['success']) {
-      update();
-      Get.snackbar("Thong bao", "Accept thanh cong");
-      listUserNotApprove.value.removeWhere((element) => element.id == userId);
+  getListComment(int postId) {
+    return listComment.where((element) => element.postId == postId).toList();
+  }
+
+  changeWriteIdTopic(int value) {
+    wIdTopic.value = value;
+    //update();
+    //print(wIdTopic);
+  }
+
+  imagePicker(ImageSource imgS) async {
+    try {
+      final imagePick = await ImagePicker().pickImage(source: imgS);
+      if (imagePick == null) {
+        return;
+      } else {
+        image.value = File("");
+        final imageTemp = File(imagePick.path);
+        image.value = imageTemp;
+        update();
+      }
+    } on PlatformException catch (e) {
+      return e;
     }
   }
 
-  notAcceptUser() {}
+  onPost() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int userID = prefs.getInt('user_id') ?? 0;
+    String title = titleController.text;
+    String content = contentController.text;
+    int topicID = wIdTopic.value;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}createGroupPost.php"), body: {
+      'title': title,
+      'content': content,
+      'user_id': userID.toString(),
+      'topic_id': topicID.toString(),
+      'group_id': groupId.toString(),
+      'image': image.value.path,
+    });
 
-  getListComment(int postId) {
-    return listComment.where((element) => element.postId == postId).toList();
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      Get.snackbar("Thông báo", "Đang chờ duyệt !");
+      Get.to(ScreenInsideGroup(groupId: groupId));
+    } else {
+      Get.snackbar("Thông báo", "Đăng bài thất bại !");
+    }
   }
 }

@@ -12,6 +12,7 @@ class GroupController extends GetxController {
   late List<Member> listMember;
   late List<Group> listGroupNotJoind;
   late int userId;
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -107,8 +108,9 @@ class GroupController extends GetxController {
 
     List<Group> lj = <Group>[];
     // list userid - groupid da tham gia
-    List<Member> listJoined =
-        listMember.where((element) => element.userId == id).toList();
+    List<Member> listJoined = listMember
+        .where((element) => element.userId == id && element.approve == 1)
+        .toList();
 
     // set IdGroup joined !
     Set<int> listIdGroupJoined = <int>{};
@@ -176,5 +178,59 @@ class GroupController extends GetxController {
         .toList()
         .length;
     return c;
+  }
+
+  requestAction(int groupId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int id = prefs.getInt('user_id') ?? 0;
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}/requestGroup.php"), body: {
+      'user_id': id.toString(),
+      'group_id': groupId.toString(),
+    });
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      Get.snackbar("Request", result['message']);
+      onInit();
+    } else {
+      Get.snackbar("Request", result['message']);
+    }
+  }
+
+  bool isRequested(int groupId) {
+    List<Member> listRequested = <Member>[];
+
+    int id = userId;
+
+    // list member chua duyet
+    for (var m in listMember) {
+      if (m.approve == 0) {
+        listRequested.add(Member(
+            id: m.id,
+            userId: m.userId,
+            groupId: m.groupId,
+            position: m.position,
+            approve: m.approve));
+      }
+    }
+    // list member chua duyet co
+    return listRequested
+        .where((element) => element.userId == id && element.groupId == groupId)
+        .toList()
+        .isNotEmpty;
+  }
+
+  removeGroup(int groupId) async {
+    var response = await http
+        .post(Uri.parse("${BaseUrl.getBaseUrl()}/removeGroup.php"), body: {
+      'group_id': groupId.toString(),
+    });
+    var result = await json.decode(response.body);
+    if (result['success']) {
+      Get.snackbar("Request", result['message']);
+      onInit();
+    } else {
+      Get.snackbar("Request", result['message']);
+    }
   }
 }
